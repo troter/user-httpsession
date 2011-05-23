@@ -29,7 +29,7 @@ public abstract class SessionValidator {
      * @param session
      * @return <code>true</code> if validate maker is exists
      */
-    public abstract boolean isExistsMaker(UserHttpSession session);
+    public abstract boolean isExistsMarker(UserHttpSession session);
 
     /**
      * <p>Checks if session is valid.</p>

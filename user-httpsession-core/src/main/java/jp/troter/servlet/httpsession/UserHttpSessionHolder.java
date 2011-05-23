@@ -64,7 +64,7 @@ public class UserHttpSessionHolder {
             }
             UserHttpSession session = new UserHttpSession(request, currentSessionId, sessionStateManager, isNew);
 
-            boolean isConflictSessionId = isNew && getSessionValidator().isExistsMaker(session);
+            boolean isConflictSessionId = isNew && getSessionValidator().isExistsMarker(session);
             if (isConflictSessionId || ! getSessionValidator().isValid(session, request)) {
                 session.invalidate();
                 currentSessionId = getSessionIdGenerator().generateSessionId(request, retry);

@@ -23,7 +23,7 @@ public class DefaultSessionValidator extends SessionValidator {
     }
 
     @Override
-    public boolean isExistsMaker(UserHttpSession session) {
+    public boolean isExistsMarker(UserHttpSession session) {
         return session.getAttribute(getMakerNameRemoteAddr()) != null
             || session.getAttribute(getMakerNameUserAgent()) != null;
     }
