@@ -8,39 +8,21 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <!--  The Basics -->
   <groupId>jp.troter</groupId>
   <artifactId>user-httpsession-core</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <!-- More Project Information -->
   <name>User HttpSession Core</name>
   <description />
 
-  <!-- Properties -->
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-
-  <!-- Build Settings -->
-  <build>
-    <finalName>${pom.artifactId}</finalName>
-  </build>
-
-  <!-- Dependency Settings -->
   <dependencies>
-
     <!-- Servlet spec -->
     <dependency>
       <groupId>org.apache.geronimo.specs</groupId>
       <artifactId>geronimo-servlet_2.5_spec</artifactId>
       <version>1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-servlet_3.0_spec</artifactId>
-      <version>1.0</version>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Commons -->
@@ -49,22 +31,10 @@
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
     </dependency>
-
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.5</version>
     </dependency>
   </dependencies>
-
-  <distributionManagement>
-    <repository>
-      <id>release</id>
-      <url>http://troter.jp/maven2/release</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <url>http://troter.jp/maven2/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>

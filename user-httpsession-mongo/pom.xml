@@ -8,22 +8,14 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <!--  The Basics -->
   <groupId>jp.troter</groupId>
   <artifactId>user-httpsession-mongo</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <!-- More Project Information -->
   <name>User HttpSession MongoDB</name>
   <description />
 
-  <!-- Build Settings -->
-  <build>
-    <finalName>${pom.artifactId}</finalName>
-  </build>
-
-  <!-- Dependency Settings -->
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -38,15 +30,4 @@
       <version>2.5.3</version>
     </dependency>
   </dependencies>
-
-  <distributionManagement>
-    <repository>
-      <id>release</id>
-      <url>http://troter.jp/maven2/release</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <url>http://troter.jp/maven2/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>

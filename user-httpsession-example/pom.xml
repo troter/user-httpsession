@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>jp.troter</groupId>
+    <artifactId>user-httpsession-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+  </parent>
+
+  <packaging>pom</packaging>
+
+  <groupId>jp.troter</groupId>
+  <artifactId>user-httpsession-example-parent</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <name>User HttpSession Example [Build POM]</name>
+  <description />
+
+  <modules>
+    <module>user-httpsession-example-memcached</module>
+    <module>user-httpsession-example-mongo</module>
+    <module>user-httpsession-example-redis</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <!-- maven-dependency-plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/main/webapp/WEB-INF/lib</outputDirectory>
+              <excludeScope>provided</excludeScope>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <overWriteReleases>true</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- maven-eclipse-plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <buildOutputDirectory>src/main/webapp/WEB-INF/classes</buildOutputDirectory>
+          <downloadSources>true</downloadSources>
+          <useProjectReferences>false</useProjectReferences>
+          <additionalProjectnatures>
+            <projectnature>com.sysdeo.eclipse.tomcat.tomcatnature</projectnature>
+          </additionalProjectnatures>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

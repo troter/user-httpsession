@@ -8,22 +8,14 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <!--  The Basics -->
   <groupId>jp.troter</groupId>
   <artifactId>user-httpsession-memcached</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <!-- More Project Information -->
   <name>User HttpSession Memcached</name>
   <description />
 
-  <!-- Build Settings -->
-  <build>
-    <finalName>${pom.artifactId}</finalName>
-  </build>
-
-  <!-- Dependency Settings -->
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
@@ -46,32 +38,4 @@
     </dependency>
     -->
   </dependencies>
-
-  <repositories>
-    <repository>
-      <id>spy</id>
-      <name>Spy Repository</name>
-      <layout>default</layout>
-      <url>http://files.couchbase.com/maven2/</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>local</id>
-      <name>Local Repository</name>
-      <url>file:repo</url>
-    </repository>
-  </repositories>
-
-  <distributionManagement>
-    <repository>
-      <id>release</id>
-      <url>http://troter.jp/maven2/release</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <url>http://troter.jp/maven2/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
 </project>
