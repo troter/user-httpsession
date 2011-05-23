@@ -8,12 +8,20 @@ public class DefaultSessionState implements SessionState {
 
     Map<String, Object> map;
 
+    protected long lastAccessedTime;
+
     public DefaultSessionState(Map<String, Object> map) {
-        this.map = map;
+        this(map, 0);
     }
+
+    public DefaultSessionState(Map<String, Object> map, long lastAccessedTime) {
+        this.map = map;
+        this.lastAccessedTime = lastAccessedTime;
+    }
+
     @Override
     public long getLastAccessedTime() {
-        return 0;
+        return lastAccessedTime;
     }
 
     @Override
