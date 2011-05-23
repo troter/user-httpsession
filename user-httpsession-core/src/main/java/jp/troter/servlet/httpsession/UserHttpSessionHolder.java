@@ -49,6 +49,7 @@ public class UserHttpSessionHolder {
         }
 
         session = createHttpSession(sessionId, needNewSession);
+        sessionInvalidate = false;
 
         return session;
     }
@@ -73,7 +74,6 @@ public class UserHttpSessionHolder {
             }
 
             // session is valid. return.
-            sessionInvalidate = false;
             return session;
         }
     }
