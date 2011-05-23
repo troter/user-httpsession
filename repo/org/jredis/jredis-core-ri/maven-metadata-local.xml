@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.jredis</groupId>
+  <artifactId>jredis-core-ri</artifactId>
+  <version>1.0-rc2</version>
+  <versioning>
+    <versions>
+      <version>1.0-rc2</version>
+    </versions>
+    <lastUpdated>20110523155616</lastUpdated>
+  </versioning>
+</metadata>

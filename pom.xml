@@ -140,6 +140,11 @@ line.separator=\n
 
   <repositories>
     <repository>
+      <id>local</id>
+      <name>Local Repository</name>
+      <url>file:repo</url>
+    </repository>
+    <repository>
       <id>troter.jp release</id>
       <name>TROTER.JP Release Maven2 Repository</name>
       <url>http://troter.jp/maven2/release</url>
