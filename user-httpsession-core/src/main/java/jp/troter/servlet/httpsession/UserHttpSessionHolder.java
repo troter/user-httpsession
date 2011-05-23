@@ -65,16 +65,18 @@ public class UserHttpSessionHolder {
             UserHttpSession session = new UserHttpSession(request, currentSessionId, sessionStateManager, isNew);
 
             boolean isConflictSessionId = isNew && getSessionValidator().isExistsMarker(session);
-            if (isConflictSessionId || ! getSessionValidator().isValid(session, request)) {
-                session.invalidate();
-                currentSessionId = getSessionIdGenerator().generateSessionId(request, retry);
-                isNew = true;
-                retry++;
-                continue;
+            if (! isConflictSessionId) {
+                getSessionValidator().setupMarker(session, request);
+                if (getSessionValidator().isValid(session, request)) {
+                    // session is valid. return.
+                    return session;
+                }
             }
 
-            // session is valid. return.
-            return session;
+            session.invalidate();
+            currentSessionId = getSessionIdGenerator().generateSessionId(request, retry);
+            isNew = true;
+            retry++;
         }
     }
 

@@ -29,9 +29,19 @@ public class DefaultSessionValidator extends SessionValidator {
     }
 
     @Override
-    public boolean isValid(UserHttpSession session, UserHttpSessionHttpServletRequestWrapper request) {
-        setupMaker(session, request);
+    public void setupMarker(UserHttpSession session, UserHttpSessionHttpServletRequestWrapper request) {
+        if (session.getAttribute(getMakerNameRemoteAddr()) == null) {
+            session.setAttribute(getMakerNameRemoteAddr(),
+                    ObjectUtils.toString(request.getRemoteAddr(), ""));
+        }
+        if (session.getAttribute(getMakerNameUserAgent()) == null) {
+            session.setAttribute(getMakerNameUserAgent(),
+                    ObjectUtils.toString(request.getHeader("User-Agent"), ""));
+        }
+    }
 
+    @Override
+    public boolean isValid(UserHttpSession session, UserHttpSessionHttpServletRequestWrapper request) {
         String requestRemoteAddr = ObjectUtils.toString(request.getRemoteAddr(), "");
         String requestUserAgent  = ObjectUtils.toString(request.getHeader("User-Agent"), "");
         String sessionRemoteAddr = ObjectUtils.toString(session.getAttribute(getMakerNameRemoteAddr()), "");
@@ -49,17 +59,6 @@ public class DefaultSessionValidator extends SessionValidator {
         }
 
         return ! hasPossibilityOfSessionHijack;
-    }
-
-    protected void setupMaker(UserHttpSession session, UserHttpSessionHttpServletRequestWrapper request) {
-        if (session.getAttribute(getMakerNameRemoteAddr()) == null) {
-            session.setAttribute(getMakerNameRemoteAddr(),
-                    ObjectUtils.toString(request.getRemoteAddr(), ""));
-        }
-        if (session.getAttribute(getMakerNameUserAgent()) == null) {
-            session.setAttribute(getMakerNameUserAgent(),
-                    ObjectUtils.toString(request.getHeader("User-Agent"), ""));
-        }
     }
 
     public void trace(String message) {

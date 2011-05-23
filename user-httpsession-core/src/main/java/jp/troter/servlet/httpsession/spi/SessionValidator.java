@@ -32,6 +32,13 @@ public abstract class SessionValidator {
     public abstract boolean isExistsMarker(UserHttpSession session);
 
     /**
+     * <p>Setup validate values</p>
+     * @param session
+     * @param request
+     */
+    public abstract void setupMarker(UserHttpSession session, UserHttpSessionHttpServletRequestWrapper request);
+
+    /**
      * <p>Checks if session is valid.</p>
      * @param session
      * @param request
