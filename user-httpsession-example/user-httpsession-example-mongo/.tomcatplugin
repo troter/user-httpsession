@@ -4,7 +4,7 @@
     <exportSource>false</exportSource>
     <reloadable>true</reloadable>
     <redirectLogger>false</redirectLogger>
-    <updateXml>false</updateXml>
+    <updateXml>true</updateXml>
     <warLocation></warLocation>
     <extraInfo></extraInfo>
     <webPath>user-httpsession-example-mongo</webPath>
