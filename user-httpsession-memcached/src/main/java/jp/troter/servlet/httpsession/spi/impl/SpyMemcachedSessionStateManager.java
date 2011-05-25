@@ -22,7 +22,7 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
     @SuppressWarnings("unchecked")
     @Override
     public SessionState loadState(String sessionId) {
-        Object obj = initializer.getMemcachedClient().get(key(sessionId));
+        Object obj = getSpyMemcachedInitializer().getMemcachedClient().get(key(sessionId));
         Map<String, Object> attributes = new HashMap<String, Object>();
         if (obj != null) {
 
@@ -53,12 +53,12 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
             }
         }
 
-        initializer.getMemcachedClient().add(key(sessionId), initializer.getSessionTimeout(), attributes);
+        getSpyMemcachedInitializer().getMemcachedClient().set(key(sessionId), initializer.getSessionTimeout(), attributes);
     }
 
     @Override
     public void removeState(String sessionId) {
-        initializer.getMemcachedClient().delete(key(sessionId));
+        getSpyMemcachedInitializer().getMemcachedClient().delete(key(sessionId));
     }
 
     protected String key(String sessionId) {
