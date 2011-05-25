@@ -1,6 +1,5 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
-import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +24,10 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
         Object obj = getSpyMemcachedInitializer().getMemcachedClient().get(key(sessionId));
         Map<String, Object> attributes = new HashMap<String, Object>();
         if (obj != null) {
-
             Map<String, Object> rawAttributes = (Map<String, Object>) obj;
             for (String key : rawAttributes.keySet()) {
                 try {
-                    byte[] objectData = (byte[])rawAttributes.get(key);
-                    attributes.put(key, getSessionValueSerializer().deserialize(objectData));
+                    attributes.put(key, rawAttributes.get(key));
                 } catch (Exception UserHttpSessionSerializationException) {
                 }
             }
@@ -48,7 +45,7 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
             Object value = sessionState.getAttribute(name);
             if (value == null) { continue; }
             try {
-                attributes.put(name, getSessionValueSerializer().serialize((Serializable)value));
+                attributes.put(name, value);
             } catch (Exception UserHttpSessionSerializationException) {
             }
         }
