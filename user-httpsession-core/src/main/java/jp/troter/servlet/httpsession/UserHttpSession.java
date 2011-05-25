@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSessionContext;
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.state.SessionState;
 
+import org.apache.commons.lang.ObjectUtils;
+
 public class UserHttpSession implements HttpSession {
 
     protected final UserHttpSessionHttpServletRequestWrapper request;
@@ -94,20 +96,20 @@ public class UserHttpSession implements HttpSession {
         return getAttribute(name);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     @Override
     public Enumeration getAttributeNames() {
         return getSessionState().getAttributeNames();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     @Override
     public String[] getValueNames() {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         for (Enumeration e = getAttributeNames(); e.hasMoreElements();) {
-            list.add(e.nextElement());
+            list.add(ObjectUtils.toString(e.nextElement()));
         }
-        return (String[]) list.toArray(new String[list.size()]);
+        return list.toArray(new String[list.size()]);
     }
 
     @Override
