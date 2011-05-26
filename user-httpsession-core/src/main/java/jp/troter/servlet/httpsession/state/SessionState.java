@@ -7,6 +7,8 @@ import java.util.Enumeration;
  */
 public interface SessionState {
 
+    long getCreationTime();
+
     long getLastAccessedTime();
 
     Enumeration<?> getAttributeNames();

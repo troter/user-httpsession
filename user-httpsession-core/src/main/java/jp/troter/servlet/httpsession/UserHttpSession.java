@@ -1,7 +1,6 @@
 package jp.troter.servlet.httpsession;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -28,8 +27,6 @@ public class UserHttpSession implements HttpSession {
 
     protected final boolean isNew;
 
-    protected final long creationTime = new Date().getTime();
-
     protected int maxInactiveInterval = Integer.MAX_VALUE;
 
     public UserHttpSession(UserHttpSessionHttpServletRequestWrapper request, String id,
@@ -49,7 +46,7 @@ public class UserHttpSession implements HttpSession {
 
     @Override
     public long getCreationTime() {
-        return creationTime;
+        return getSessionState().getCreationTime();
     }
 
     @Override

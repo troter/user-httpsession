@@ -1,12 +1,15 @@
 package jp.troter.servlet.httpsession.state;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
 
 public class DefaultSessionState implements SessionState {
 
     Map<String, Object> map;
+
+    protected final long creationTime = new Date().getTime();
 
     protected long lastAccessedTime;
 
@@ -17,6 +20,11 @@ public class DefaultSessionState implements SessionState {
     public DefaultSessionState(Map<String, Object> map, long lastAccessedTime) {
         this.map = map;
         this.lastAccessedTime = lastAccessedTime;
+    }
+
+    @Override
+    public long getCreationTime() {
+        return creationTime;
     }
 
     @Override
