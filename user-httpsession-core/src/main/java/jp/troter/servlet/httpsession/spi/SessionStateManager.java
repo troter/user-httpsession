@@ -33,4 +33,6 @@ public abstract class SessionStateManager {
     public abstract void updateState(String sessionId, SessionState sessionState);
 
     public abstract void removeState(String sessionId);
+
+    public abstract int getTimeoutSecond();
 }

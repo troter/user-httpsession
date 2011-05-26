@@ -50,12 +50,17 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
             }
         }
 
-        getSpyMemcachedInitializer().getMemcachedClient().set(key(sessionId), initializer.getSessionTimeout(), attributes);
+        getSpyMemcachedInitializer().getMemcachedClient().set(key(sessionId), getTimeoutSecond(), attributes);
     }
 
     @Override
     public void removeState(String sessionId) {
         getSpyMemcachedInitializer().getMemcachedClient().delete(key(sessionId));
+    }
+
+    @Override
+    public int getTimeoutSecond() {
+        return getSpyMemcachedInitializer().getSessionTimeout();
     }
 
     protected String key(String sessionId) {

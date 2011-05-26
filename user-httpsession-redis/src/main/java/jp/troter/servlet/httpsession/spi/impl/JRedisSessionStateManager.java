@@ -23,4 +23,8 @@ public class JRedisSessionStateManager extends SessionStateManager {
 
     }
 
+    @Override
+    public int getTimeoutSecond() {
+        return 0;
+    }
 }

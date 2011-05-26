@@ -76,6 +76,11 @@ public class MongoSessionStateManager extends SessionStateManager {
         }
     }
 
+    @Override
+    public int getTimeoutSecond() {
+        return 0;
+    }
+
     protected DBObject findBySessionId(String sessionId) {
         BasicDBObject query = new BasicDBObject();
         query.put("_id", sessionId);
