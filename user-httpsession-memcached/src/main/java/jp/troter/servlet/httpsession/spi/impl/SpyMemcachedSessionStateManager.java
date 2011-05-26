@@ -10,7 +10,12 @@ import jp.troter.servlet.httpsession.spi.SpyMemcachedInitializer;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SpyMemcachedSessionStateManager extends SessionStateManager {
+
+    private static Logger log = LoggerFactory.getLogger(SpyMemcachedSessionStateManager.class);
 
     public static final String KEY_PREFIX = "httpsession";
 
@@ -21,16 +26,15 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
     @SuppressWarnings("unchecked")
     @Override
     public SessionState loadState(String sessionId) {
-        Object obj = getSpyMemcachedInitializer().getMemcachedClient().get(key(sessionId));
         Map<String, Object> attributes = new HashMap<String, Object>();
-        if (obj != null) {
+        try {
+            Object obj = getSpyMemcachedInitializer().getMemcachedClient().get(key(sessionId));
+            if (obj == null) { return new DefaultSessionState(attributes); }
             Map<String, Object> rawAttributes = (Map<String, Object>) obj;
-            for (String key : rawAttributes.keySet()) {
-                try {
-                    attributes.put(key, rawAttributes.get(key));
-                } catch (Exception UserHttpSessionSerializationException) {
-                }
-            }
+            attributes.putAll(rawAttributes);
+        } catch (RuntimeException e) {
+            log.warn("Memcached exception occurred at get method. session_id=" + sessionId, e);
+            removeState(sessionId);
         }
 
         return new DefaultSessionState(attributes);
@@ -39,23 +43,26 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
     @Override
     public void updateState(String sessionId, SessionState sessionState) {
         Map<String, Object> attributes = new HashMap<String, Object>();
-
         for (Enumeration<?> e = sessionState.getAttributeNames(); e.hasMoreElements();) {
             String name = (String)e.nextElement();
             Object value = sessionState.getAttribute(name);
             if (value == null) { continue; }
-            try {
-                attributes.put(name, value);
-            } catch (Exception UserHttpSessionSerializationException) {
-            }
+            attributes.put(name, value);
         }
-
-        getSpyMemcachedInitializer().getMemcachedClient().set(key(sessionId), getTimeoutSecond(), attributes);
+        try {
+            getSpyMemcachedInitializer().getMemcachedClient().set(key(sessionId), getTimeoutSecond(), attributes);
+        } catch (RuntimeException e) {
+            log.warn("Memcached exception occurred at set method. session_id=" + sessionId, e);
+        }
     }
 
     @Override
     public void removeState(String sessionId) {
-        getSpyMemcachedInitializer().getMemcachedClient().delete(key(sessionId));
+        try {
+            getSpyMemcachedInitializer().getMemcachedClient().delete(key(sessionId));
+        } catch (RuntimeException e) {
+            log.warn("Memcached exception occurred at delete method. session_id=" + sessionId, e);
+        }
     }
 
     @Override
