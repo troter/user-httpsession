@@ -6,8 +6,12 @@ import jp.troter.servlet.httpsession.spi.SessionValidator;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultSessionValidator extends SessionValidator {
+
+    private static Logger log = LoggerFactory.getLogger(DefaultSessionValidator.class);
 
     protected static final String HTTPSESSION_REMOTE_ADDR
         = "jp.troter.servlet.httpsession.spi.impl.DefaultSessionValidator.REMOTE_ADDR";
@@ -51,17 +55,36 @@ public class DefaultSessionValidator extends SessionValidator {
             =  ! StringUtils.equals(sessionRemoteAddr, requestRemoteAddr)
             || ! StringUtils.equals(sessionUserAgent, requestUserAgent);
         if (hasPossibilityOfSessionHijack) {
-            trace("Hijacked session.");
-            trace("Request url is " + request.getRequestURI());
-            trace("Session id is " + session.getId());
-            trace("REQUEST: remote_addr[" + requestRemoteAddr + "] user_agent[" + requestUserAgent + "]");
-            trace("SESSION: remote_addr[" + sessionRemoteAddr + "] user_agent[" + sessionUserAgent + "]");
+            String message = getHijackSessionMessage(
+                    request.getRequestURI(), session.getId(),
+                    requestRemoteAddr, requestUserAgent,
+                    sessionRemoteAddr, sessionUserAgent);
+            log.warn(message);
         }
 
         return ! hasPossibilityOfSessionHijack;
     }
 
-    public void trace(String message) {
-        //TODO
+    protected String getHijackSessionMessage(
+            String requestUrl, String sessionId,
+            String requestRemoteAddr, String requestUserAgent,
+            String sessionRemoteAddr, String sessionUserAgent)
+    {
+        StringBuilder m = new StringBuilder();
+        m.append("Session hijack occured!");
+        m.append("[");
+        m.append("request_url=").append(requestUrl);
+        m.append(", ");
+        m.append("session_id=").append(sessionId);
+        m.append(", ");
+        m.append("request_remote_addr=").append(requestRemoteAddr);
+        m.append(", ");
+        m.append("request_user_agent=").append(requestUserAgent);
+        m.append(", ");
+        m.append("session_remote_addr=").append(sessionRemoteAddr);
+        m.append(", ");
+        m.append("session_user_agent=").append(sessionUserAgent);
+        m.append("]");
+        return m.toString();
     }
 }
