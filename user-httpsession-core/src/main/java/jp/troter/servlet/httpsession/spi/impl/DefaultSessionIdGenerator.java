@@ -2,12 +2,16 @@ package jp.troter.servlet.httpsession.spi.impl;
 
 import java.util.UUID;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
 import jp.troter.servlet.httpsession.UserHttpSessionHttpServletRequestWrapper;
 import jp.troter.servlet.httpsession.spi.SessionIdGenerator;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DefaultSessionIdGenerator extends SessionIdGenerator{
+
+    private static Logger log = LoggerFactory.getLogger(DefaultSessionIdGenerator.class);
 
     @Override
     public String generateSessionId(UserHttpSessionHttpServletRequestWrapper request) {
@@ -30,8 +34,7 @@ public class DefaultSessionIdGenerator extends SessionIdGenerator{
         try {
             hostname = java.net.InetAddress.getLocalHost().getHostName();
         } catch (java.net.UnknownHostException e) {
-            // TODO logging
-            hostname = "";
+            log.warn("Can not get local host name", e);
         }
         return hostname;
     }
