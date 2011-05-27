@@ -5,9 +5,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import jp.troter.servlet.httpsession.spi.MongoDBInitializer;
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
-import jp.troter.servlet.httpsession.spi.MongoDBInitializer;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
 
@@ -19,9 +19,9 @@ import com.mongodb.DBObject;
 
 public class MongoSessionStateManager extends SessionStateManager {
 
-    public static final String SESSION_COLLECTION_NAME = "httpsession";
+    private static final String SESSION_COLLECTION_NAME = "httpsession";
 
-    public static final String ATTRIBUTES_KEY = "attributes";
+    private static final String ATTRIBUTES_KEY = "attributes";
 
     protected MongoDBInitializer initializer;
 

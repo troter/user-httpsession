@@ -13,9 +13,9 @@ public class DefaultSessionValidator extends SessionValidator {
 
     private static Logger log = LoggerFactory.getLogger(DefaultSessionValidator.class);
 
-    protected static final String HTTPSESSION_REMOTE_ADDR
+    private static final String HTTPSESSION_REMOTE_ADDR
         = "jp.troter.servlet.httpsession.spi.impl.DefaultSessionValidator.REMOTE_ADDR";
-    protected static final String HTTPSESSION_USER_AGENT
+    private static final String HTTPSESSION_USER_AGENT
         = "jp.troter.servlet.httpsession.spi.impl.DefaultSessionValidator.USER_AGENT";
 
     protected String getMakerNameRemoteAddr() {

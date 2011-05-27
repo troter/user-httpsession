@@ -11,7 +11,7 @@ import org.apache.commons.lang.StringUtils;
 
 public class DefaultSessionCookieHandler extends SessionCookieHandler {
 
-    public static final String SESSION_ID_KEY = "SESSIONID";
+    private static final String SESSION_ID_KEY = "SESSIONID";
 
     @Override
     public String getSessionIdKey() {
