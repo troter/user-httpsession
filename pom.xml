@@ -57,7 +57,9 @@
     <module>user-httpsession-example</module>
   </modules>
 
-  <properties />
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -108,7 +110,7 @@
         <configuration>
           <source>1.6</source>
           <target>1.6</target>
-          <encoding>UTF-8</encoding>
+          <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
 
@@ -163,7 +165,7 @@ line.separator=\n
 
   <repositories>
     <repository>
-      <id>local</id>
+      <id>local-repository</id>
       <name>Local Repository</name>
       <url>file:repo</url>
     </repository>
