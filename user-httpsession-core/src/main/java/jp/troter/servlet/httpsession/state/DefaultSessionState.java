@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultSessionState implements SessionState {
 
@@ -18,7 +19,7 @@ public class DefaultSessionState implements SessionState {
     }
 
     public DefaultSessionState(Map<String, Object> map, long lastAccessedTime) {
-        this.map = map;
+        this.map = new ConcurrentHashMap<String, Object>(map);
         this.lastAccessedTime = lastAccessedTime;
     }
 
