@@ -5,7 +5,7 @@ import com.mongodb.DB;
 public abstract class MongoDBInitializer {
 
     private static final String SERVICE_CLASS_NAME
-        = "jp.troter.servlet.httpsession.spi.MongoDbInitializer";
+        = "jp.troter.servlet.httpsession.spi.MongoDBInitializer";
 
     private static SingleServiceLoader<MongoDBInitializer> loader;
 

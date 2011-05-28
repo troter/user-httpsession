@@ -105,7 +105,7 @@ public class MongoSessionStateManager extends SessionStateManager {
 
     protected DBObject findBySessionId(String sessionId) {
         BasicDBObject query = new BasicDBObject();
-        query.put("_id", sessionId);
+        query.put("session_id", sessionId);
         DBCollection coll = getSessionCollection();
         DBCursor cur = coll.find(query);
         while(cur.hasNext()) {
@@ -116,7 +116,7 @@ public class MongoSessionStateManager extends SessionStateManager {
 
     protected WriteResult insert(String sessionId, BasicDBObject attributes, long creationTime) {
         BasicDBObject session = new BasicDBObject();
-        session.put("_id", sessionId);
+        session.put("session_id", sessionId);
         session.put(getAttributesKey(), attributes);
         session.put(getLastAccessedTimeKey(), creationTime);
         return getSessionCollection().insert(session);
@@ -129,7 +129,7 @@ public class MongoSessionStateManager extends SessionStateManager {
     }
 
     protected DBCollection getSessionCollection() {
-        return initializer.getDB().getCollection(getSessionCollectionName());
+        return getMongoDBInitializer().getDB().getCollection(getSessionCollectionName());
     }
 
     protected String getSessionCollectionName() {
