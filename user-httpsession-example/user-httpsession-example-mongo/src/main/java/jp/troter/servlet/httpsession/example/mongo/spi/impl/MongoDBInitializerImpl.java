@@ -7,6 +7,7 @@ import jp.troter.servlet.httpsession.spi.MongoDBInitializer;
 
 import com.mongodb.DB;
 import com.mongodb.Mongo;
+import com.mongodb.MongoURI;
 
 public class MongoDBInitializerImpl extends MongoDBInitializer {
 
@@ -16,7 +17,8 @@ public class MongoDBInitializerImpl extends MongoDBInitializer {
     public DB getDB() {
         if (m == null) {
             try {
-                m = new Mongo("localhost", 27017);
+                MongoURI uri = new MongoURI("mongodb://127.0.0.1:27017");
+                m = new Mongo(uri);
             } catch (IOException e) {
                 return null;
             }
