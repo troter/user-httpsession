@@ -93,7 +93,7 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
         return serializer;
     }
 
-    private static class Cell implements Serializable {
+    protected static class Cell implements Serializable {
         private static final long serialVersionUID = 1L;
 
         Map<String, Object> attributes;
