@@ -13,8 +13,6 @@ public class UserHttpSessionHolder {
 
     protected UserHttpSession session;
 
-    protected boolean sessionInvalidate = false;
-
     protected SessionValidator sessionValidator;
 
     protected SessionIdGenerator sessionIdGenerator;
@@ -49,7 +47,6 @@ public class UserHttpSessionHolder {
         }
 
         session = createHttpSession(sessionId, needNewSession);
-        sessionInvalidate = false;
 
         return session;
     }
@@ -85,11 +82,10 @@ public class UserHttpSessionHolder {
      */
     public void sessionInvalidate() {
         session = null;
-        sessionInvalidate = true;
     }
 
     public boolean invalidate() {
-        return sessionInvalidate;
+        return session == null;
     }
 
     protected SessionValidator getSessionValidator() {
