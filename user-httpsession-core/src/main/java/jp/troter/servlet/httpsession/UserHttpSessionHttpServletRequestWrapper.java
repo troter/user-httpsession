@@ -35,7 +35,7 @@ public class UserHttpSessionHttpServletRequestWrapper extends
         this.request = request;
         this.response = response;
         this.sessionStateManager = sessionStateManager;
-        sessionHolder = new UserHttpSessionHolder(this, sessionStateManager);
+        sessionHolder = newUserHttpSessionHolder(this, sessionStateManager);
         setupSessionId(request);
     }
 
@@ -98,6 +98,12 @@ public class UserHttpSessionHttpServletRequestWrapper extends
         return request;
     }
 
+    protected UserHttpSessionHolder newUserHttpSessionHolder(
+            UserHttpSessionHttpServletRequestWrapper request, SessionStateManager sessionStateManager
+    ) {
+        return new UserHttpSessionHolder(request, sessionStateManager);
+    }
+    
     protected SessionCookieHandler getSessionCookieHandler() {
         if (sessionCookieHandler == null) {
             sessionCookieHandler = SessionCookieHandler.newInstance();
