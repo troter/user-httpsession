@@ -1,36 +1,93 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import jp.troter.servlet.httpsession.exception.UserHttpSessionSerializationException;
 import jp.troter.servlet.httpsession.spi.JRedisInitializer;
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
+import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
+import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
+
+import org.jredis.RedisException;
+import org.jredis.ri.alphazero.support.DefaultCodec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JRedisSessionStateManager extends SessionStateManager {
 
+    private static Logger log = LoggerFactory.getLogger(JRedisSessionStateManager.class);
+
+    private static final String KEY_PREFIX = "httpsession";
+
     protected JRedisInitializer initializer;
+
+    protected SessionValueSerializer serializer;
 
     @Override
     public SessionState loadState(String sessionId) {
-        // TODO Auto-generated method stub
-        return null;
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        long lastAccessedTime = new Date().getTime();
+        try {
+            byte[] cellData = getInitializer().getJRedis().get(key(sessionId));
+            if (cellData == null) { return new DefaultSessionState(); }
+            Cell cell = (Cell)DefaultCodec.decode(cellData);
+            lastAccessedTime = cell.getLastAccessedTime();
+            if (lastAccessedTime > getTimeoutTime()) { return new DefaultSessionState(); }
+            attributes.putAll(cell.getAttributes());
+        } catch (RedisException e) {
+            log.warn("Redis exception occurred. session_id=" + sessionId, e);
+            removeState(sessionId);
+        } catch (RuntimeException e) {
+            log.warn("Redis exception occurred. session_id=" + sessionId, e);
+            removeState(sessionId);
+        }
+
+        return new DefaultSessionState(attributes, lastAccessedTime, false);
     }
 
     @Override
     public void saveState(String sessionId, SessionState sessionState) {
-        // TODO Auto-generated method stub
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        for (Enumeration<?> e = sessionState.getAttributeNames(); e.hasMoreElements();) {
+            String name = (String)e.nextElement();
+            Object value = sessionState.getAttribute(name);
+            if (value == null) { continue; }
+            attributes.put(name, value);
+        }
 
+        Cell cell = new Cell(attributes, sessionState.getCreationTime());
+        try {
+            getInitializer().getJRedis().set(key(sessionId), cell);
+        } catch (RedisException e) {
+            log.warn("Redis exception occurred. session_id=" + sessionId, e);
+        } catch (RuntimeException e) {
+            log.warn("Redis exception occurred. session_id=" + sessionId, e);
+        }
     }
 
     @Override
     public void removeState(String sessionId) {
-        // TODO Auto-generated method stub
-
+        try {
+            getInitializer().getJRedis().del(key(sessionId));
+        } catch (RedisException e) {
+            log.warn("Redis exception occurred. session_id=" + sessionId, e);
+        }
     }
 
     @Override
     public int getTimeoutSecond() {
         return getInitializer().getSessionTimeout();
     }
-    
+
+    protected String key(String sessionId) {
+        return KEY_PREFIX + "/" + sessionId;
+    }
+
     protected JRedisInitializer getInitializer() {
         if (initializer == null) {
             initializer = JRedisInitializer.newInstance();
@@ -38,4 +95,30 @@ public class JRedisSessionStateManager extends SessionStateManager {
         return initializer;
     }
 
+    protected SessionValueSerializer getSerializer() {
+        if (serializer == null) {
+            serializer = SessionValueSerializer.newInstance();
+        }
+        return serializer;
+    }
+
+    protected static class Cell implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        Map<String, Object> attributes;
+        long lastAccessedTime;
+
+        public Cell(Map<String, Object> attributes, long lastAccessedTime) {
+            this.attributes = attributes;
+            this.lastAccessedTime = lastAccessedTime;
+        }
+
+        public Map<String, Object> getAttributes() {
+            return attributes;
+        }
+
+        public long getLastAccessedTime() {
+            return lastAccessedTime;
+        }
+    }
 }
