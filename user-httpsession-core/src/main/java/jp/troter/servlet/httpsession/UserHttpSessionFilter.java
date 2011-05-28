@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -15,10 +16,13 @@ import jp.troter.servlet.httpsession.spi.SessionStateManager;
 
 public class UserHttpSessionFilter implements Filter {
 
+    protected FilterConfig filterConfig;
     protected SessionStateManager sessionStateManager;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException { }
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.filterConfig = filterConfig;
+    }
 
     @Override
     public void destroy() { }
@@ -28,7 +32,7 @@ public class UserHttpSessionFilter implements Filter {
             FilterChain chain) throws IOException, ServletException {
         SessionStateManager ssm = getSessionStateManager();
         UserHttpSessionHttpServletRequestWrapper requestWrapper = newUserHttpSessionHttpServletRequestWrapper(
-                (HttpServletRequest) request, (HttpServletResponse) response, ssm);
+                (HttpServletRequest) request, (HttpServletResponse) response, filterConfig.getServletContext(), ssm);
         UserHttpSessionHttpServletResponseWrapper responseWrapper = newUserHttpSessionHttpServletResponseWrapper(
                 (HttpServletResponse) response, requestWrapper, ssm);
 
@@ -41,9 +45,10 @@ public class UserHttpSessionFilter implements Filter {
 
     protected UserHttpSessionHttpServletRequestWrapper newUserHttpSessionHttpServletRequestWrapper(
             HttpServletRequest request, HttpServletResponse response,
+            ServletContext servletContext,
             SessionStateManager sessionStateManager
     ) {
-        return new UserHttpSessionHttpServletRequestWrapper(request, response, sessionStateManager);
+        return new UserHttpSessionHttpServletRequestWrapper(request, response, servletContext, sessionStateManager);
     }
 
     protected UserHttpSessionHttpServletResponseWrapper newUserHttpSessionHttpServletResponseWrapper(

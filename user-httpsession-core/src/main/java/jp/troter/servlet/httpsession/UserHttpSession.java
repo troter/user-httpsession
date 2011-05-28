@@ -30,10 +30,11 @@ public class UserHttpSession implements HttpSession {
     protected int maxInactiveInterval = Integer.MAX_VALUE;
 
     public UserHttpSession(UserHttpSessionHttpServletRequestWrapper request, String id,
-            SessionStateManager sessionStateManager, boolean isNew) {
+            SessionStateManager sessionStateManager, ServletContext servletContext, boolean isNew) {
         this.request = request;
         this.id = id;
         this.isNew = isNew;
+        this.servletContext = servletContext;
         this.sessionStateManager = sessionStateManager;
     }
 
@@ -59,12 +60,9 @@ public class UserHttpSession implements HttpSession {
         return getSessionState().getLastAccessedTime();
     }
 
-    /**
-     * NOTICE: always return null.
-     */
     @Override
     public ServletContext getServletContext() {
-        return null;
+        return servletContext;
     }
 
     @Override
