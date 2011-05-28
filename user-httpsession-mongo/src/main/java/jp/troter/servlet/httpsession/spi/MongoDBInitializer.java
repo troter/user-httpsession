@@ -1,6 +1,6 @@
 package jp.troter.servlet.httpsession.spi;
 
-import com.mongodb.DB;
+import com.mongodb.DBCollection;
 
 public abstract class MongoDBInitializer {
 
@@ -20,7 +20,7 @@ public abstract class MongoDBInitializer {
         return getLoader().newService();
     }
 
-    public abstract DB getDB();
+    public abstract DBCollection getDBCollection();
 
     public abstract int getSessionTimeout();
 }

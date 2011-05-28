@@ -26,8 +26,6 @@ public class MongoSessionStateManager extends SessionStateManager {
 
     private static Logger log = LoggerFactory.getLogger(MongoSessionStateManager.class);
 
-    private static final String SESSION_COLLECTION_NAME = "httpsession";
-
     private static final String ATTRIBUTES_KEY = "attributes";
 
     private static final String LAST_ACCESSED_TIME_KEY = "last_accessed_time";
@@ -144,11 +142,7 @@ public class MongoSessionStateManager extends SessionStateManager {
     }
 
     protected DBCollection getSessionCollection() {
-        return getInitializer().getDB().getCollection(getSessionCollectionName());
-    }
-
-    protected String getSessionCollectionName() {
-        return SESSION_COLLECTION_NAME;
+        return getInitializer().getDBCollection();
     }
 
     protected String getAttributesKey() {
