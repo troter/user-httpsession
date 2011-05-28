@@ -100,7 +100,7 @@ public class MongoSessionStateManager extends SessionStateManager {
 
     @Override
     public int getTimeoutSecond() {
-        return getMongoDBInitializer().getSessionTimeout();
+        return getInitializer().getSessionTimeout();
     }
 
     protected DBObject findBySessionId(String sessionId) {
@@ -129,7 +129,7 @@ public class MongoSessionStateManager extends SessionStateManager {
     }
 
     protected DBCollection getSessionCollection() {
-        return getMongoDBInitializer().getDB().getCollection(getSessionCollectionName());
+        return getInitializer().getDB().getCollection(getSessionCollectionName());
     }
 
     protected String getSessionCollectionName() {
@@ -144,7 +144,7 @@ public class MongoSessionStateManager extends SessionStateManager {
         return LAST_ACCESSED_TIME_KEY;
     }
 
-    protected MongoDBInitializer getMongoDBInitializer() {
+    protected MongoDBInitializer getInitializer() {
         if (initializer == null) {
             initializer = MongoDBInitializer.newInstance();
         }
