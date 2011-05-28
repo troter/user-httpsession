@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
-import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
 import jp.troter.servlet.httpsession.spi.SpyMemcachedInitializer;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
@@ -23,14 +22,12 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
 
     protected SpyMemcachedInitializer initializer;
 
-    protected SessionValueSerializer serializer;
-
     @Override
     public SessionState loadState(String sessionId) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         long lastAccessedTime = new Date().getTime();
         try {
-            Object obj = getSpyMemcachedInitializer().getMemcachedClient().get(key(sessionId));
+            Object obj = getInitializer().getMemcachedClient().get(key(sessionId));
             if (obj == null) { return new DefaultSessionState(); }
             Cell cell = (Cell) obj;
             attributes.putAll(cell.getAttributes());
@@ -55,7 +52,7 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
 
         Cell cell = new Cell(attributes, sessionState.getCreationTime());
         try {
-            getSpyMemcachedInitializer().getMemcachedClient().set(key(sessionId), getTimeoutSecond(), cell);
+            getInitializer().getMemcachedClient().set(key(sessionId), getTimeoutSecond(), cell);
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at set method. session_id=" + sessionId, e);
         }
@@ -64,7 +61,7 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
     @Override
     public void removeState(String sessionId) {
         try {
-            getSpyMemcachedInitializer().getMemcachedClient().delete(key(sessionId));
+            getInitializer().getMemcachedClient().delete(key(sessionId));
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at delete method. session_id=" + sessionId, e);
         }
@@ -72,25 +69,18 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
 
     @Override
     public int getTimeoutSecond() {
-        return getSpyMemcachedInitializer().getTimeoutSecond();
+        return getInitializer().getTimeoutSecond();
     }
 
     protected String key(String sessionId) {
         return KEY_PREFIX + "/" + sessionId;
     }
 
-    protected SpyMemcachedInitializer getSpyMemcachedInitializer() {
+    protected SpyMemcachedInitializer getInitializer() {
         if (initializer == null) {
             initializer = SpyMemcachedInitializer.newInstance();
         }
         return initializer;
-    }
-
-    protected SessionValueSerializer getSessionValueSerializer() {
-        if (serializer == null) {
-            serializer = SessionValueSerializer.newInstance();
-        }
-        return serializer;
     }
 
     protected static class Cell implements Serializable {
