@@ -72,7 +72,7 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
 
     @Override
     public int getTimeoutSecond() {
-        return getSpyMemcachedInitializer().getSessionTimeout();
+        return getSpyMemcachedInitializer().getTimeoutSecond();
     }
 
     protected String key(String sessionId) {
