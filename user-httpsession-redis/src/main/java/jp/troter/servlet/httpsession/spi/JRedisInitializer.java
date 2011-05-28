@@ -1,5 +1,7 @@
 package jp.troter.servlet.httpsession.spi;
 
+import org.jredis.JRedis;
+
 public abstract class JRedisInitializer {
 
     private static final String SERVICE_CLASS_NAME
@@ -18,5 +20,7 @@ public abstract class JRedisInitializer {
         return getLoader().newService();
     }
 
-    //public abstract JRedis getJRedis();
+    public abstract JRedis getJRedis();
+
+    public abstract int getSessionTimeout();
 }

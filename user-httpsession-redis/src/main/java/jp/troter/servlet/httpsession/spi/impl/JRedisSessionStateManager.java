@@ -1,9 +1,12 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
+import jp.troter.servlet.httpsession.spi.JRedisInitializer;
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.state.SessionState;
 
 public class JRedisSessionStateManager extends SessionStateManager {
+
+    protected JRedisInitializer initializer;
 
     @Override
     public SessionState loadState(String sessionId) {
@@ -25,6 +28,14 @@ public class JRedisSessionStateManager extends SessionStateManager {
 
     @Override
     public int getTimeoutSecond() {
-        return 0;
+        return getInitializer().getSessionTimeout();
     }
+    
+    protected JRedisInitializer getInitializer() {
+        if (initializer == null) {
+            initializer = JRedisInitializer.newInstance();
+        }
+        return initializer;
+    }
+
 }
