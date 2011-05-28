@@ -12,17 +12,24 @@ import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 
 public class MongoSessionStateManager extends SessionStateManager {
+
+    private static Logger log = LoggerFactory.getLogger(MongoSessionStateManager.class);
 
     private static final String SESSION_COLLECTION_NAME = "httpsession";
 
     private static final String ATTRIBUTES_KEY = "attributes";
+
+    private static final String LAST_ACCESSED_TIME_KEY = "last_accessed_time";
 
     protected MongoDBInitializer initializer;
 
@@ -30,50 +37,64 @@ public class MongoSessionStateManager extends SessionStateManager {
 
     @Override
     public SessionState loadState(String sessionId) {
-        DBObject obj = findBySessionId(sessionId);
         Map<String, Object> attributes = new HashMap<String, Object>();
-        if (obj != null) {
-            DBObject rawAttributes = (DBObject)obj.get(ATTRIBUTES_KEY);
-            for (String key : rawAttributes.keySet()) {
-                try {
-                    byte[] objectData = (byte[])rawAttributes.get(key);
-                    attributes.put(key, getSessionValueSerializer().deserialize(objectData));
-                } catch (Exception UserHttpSessionSerializationException) {
-                }
-            }
+        long lastAccessedTime = new Date().getTime();
+        try {
+            DBObject obj = findBySessionId(sessionId);
+            if (obj == null) { new DefaultSessionState(); }
+
+            lastAccessedTime = ((Long)obj.get(getLastAccessedTimeKey())).longValue();
+            if (lastAccessedTime > getTimeoutTime()) { return new DefaultSessionState(); }
+
+            attributes.putAll(toDeserializeMap((DBObject)obj.get(getAttributesKey())));
+        } catch (RuntimeException e) {
+            log.warn("MongoDB exception occurred at find method. session_id=" + sessionId, e);
+            removeState(sessionId);
         }
 
-        return new DefaultSessionState(attributes, new Date().getTime(), false);
+        return new DefaultSessionState(attributes, lastAccessedTime, false);
+    }
+
+    protected Map<String, Object> toDeserializeMap(DBObject rawAttributes) {
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        for (String name : rawAttributes.keySet()) {
+            try {
+                byte[] objectData = (byte[])rawAttributes.get(name);
+                attributes.put(name, getSessionValueSerializer().deserialize(objectData));
+            } catch (RuntimeException e) {
+                log.warn("undeserialize object name: " + name, e);
+            }
+        }
+        return attributes;
     }
 
     @Override
     public void saveState(String sessionId, SessionState sessionState) {
         BasicDBObject attributes = new BasicDBObject();
-
         for (Enumeration<?> e = sessionState.getAttributeNames(); e.hasMoreElements();) {
             String name = (String)e.nextElement();
             Object value = sessionState.getAttribute(name);
             if (value == null) { continue; }
             try {
                 attributes.put(name, getSessionValueSerializer().serialize((Serializable)value));
-            } catch (Exception UserHttpSessionSerializationException) {
+            } catch (RuntimeException x) {
+                log.warn("unserialize object name: " + name, x);
             }
         }
 
-        BasicDBObject session = new BasicDBObject();
-        session.put("_id", sessionId);
-        session.put(ATTRIBUTES_KEY, attributes);
-
-        DBCollection coll = getSessionCollection();
-        coll.insert(session);
+        try {
+            insert(sessionId, attributes, sessionState.getCreationTime());
+        } catch (RuntimeException e) {
+            log.warn("MongoDB exception occurred at insert method. session_id=" + sessionId, e);
+        }
     }
 
     @Override
     public void removeState(String sessionId) {
-        DBCollection coll = getSessionCollection();
-        DBObject obj = findBySessionId(sessionId);
-        if (obj != null) {
-            coll.remove(obj);
+        try {
+            remove(sessionId);
+        } catch (RuntimeException e) {
+            log.warn("MongoDB exception occurred at insert method. session_id=" + sessionId, e);
         }
     }
 
@@ -93,9 +114,34 @@ public class MongoSessionStateManager extends SessionStateManager {
         return null;
     }
 
+    protected WriteResult insert(String sessionId, BasicDBObject attributes, long creationTime) {
+        BasicDBObject session = new BasicDBObject();
+        session.put("_id", sessionId);
+        session.put(getAttributesKey(), attributes);
+        session.put(getLastAccessedTimeKey(), creationTime);
+        return getSessionCollection().insert(session);
+    }
+
+    protected WriteResult remove(String sessionId) {
+        DBObject obj = findBySessionId(sessionId);
+        if (obj == null) { return null; }
+        return getSessionCollection().remove(obj);
+    }
+
     protected DBCollection getSessionCollection() {
-        DB db = initializer.getDB();
-        return db.getCollection(SESSION_COLLECTION_NAME);
+        return initializer.getDB().getCollection(getSessionCollectionName());
+    }
+
+    protected String getSessionCollectionName() {
+        return SESSION_COLLECTION_NAME;
+    }
+
+    protected String getAttributesKey() {
+        return ATTRIBUTES_KEY;
+    }
+
+    protected String getLastAccessedTimeKey() {
+        return LAST_ACCESSED_TIME_KEY;
     }
 
     protected MongoDBInitializer getMongoDBInitializer() {

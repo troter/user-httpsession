@@ -1,5 +1,8 @@
 package jp.troter.servlet.httpsession.spi;
 
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 import jp.troter.servlet.httpsession.state.SessionState;
 
 
@@ -53,4 +56,12 @@ public abstract class SessionStateManager {
      * @return session timeout second.
      */
     public abstract int getTimeoutSecond();
+
+    /**
+     * timeout millisecond.
+     * @return
+     */
+    public long getTimeoutTime() {
+        return new Date().getTime() + TimeUnit.SECONDS.toMillis(getTimeoutSecond());
+    }
 }
