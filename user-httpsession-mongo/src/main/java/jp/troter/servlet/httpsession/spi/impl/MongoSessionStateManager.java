@@ -60,7 +60,7 @@ public class MongoSessionStateManager extends SessionStateManager {
         for (String name : rawAttributes.keySet()) {
             try {
                 byte[] objectData = (byte[])rawAttributes.get(name);
-                attributes.put(name, getSessionValueSerializer().deserialize(objectData));
+                attributes.put(name, getSerializer().deserialize(objectData));
             } catch (RuntimeException e) {
                 log.warn("undeserialize object name: " + name, e);
             }
@@ -76,7 +76,7 @@ public class MongoSessionStateManager extends SessionStateManager {
             Object value = sessionState.getAttribute(name);
             if (value == null) { continue; }
             try {
-                attributes.put(name, getSessionValueSerializer().serialize((Serializable)value));
+                attributes.put(name, getSerializer().serialize((Serializable)value));
             } catch (RuntimeException x) {
                 log.warn("unserialize object name: " + name, x);
             }
@@ -151,7 +151,7 @@ public class MongoSessionStateManager extends SessionStateManager {
         return initializer;
     }
 
-    protected SessionValueSerializer getSessionValueSerializer() {
+    protected SessionValueSerializer getSerializer() {
         if (serializer == null) {
             serializer = SessionValueSerializer.newInstance();
         }
