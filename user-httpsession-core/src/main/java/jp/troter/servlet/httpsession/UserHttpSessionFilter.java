@@ -35,7 +35,7 @@ public class UserHttpSessionFilter implements Filter {
         try {
             chain.doFilter(requestWrapper, responseWrapper);
         } finally {
-            responseWrapper.updateState(ssm);
+            responseWrapper.saveState(ssm);
         }
     }
 

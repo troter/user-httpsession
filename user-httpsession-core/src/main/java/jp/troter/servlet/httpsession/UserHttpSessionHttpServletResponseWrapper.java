@@ -50,11 +50,11 @@ public class UserHttpSessionHttpServletResponseWrapper extends
 
     @Override
     public void flushBuffer() throws IOException {
-        updateState(sessionStateManager);
+        saveState(sessionStateManager);
         super.flushBuffer();
     }
 
-    public void updateState(SessionStateManager sessionStateManager) {
+    public void saveState(SessionStateManager sessionStateManager) {
         UserHttpSession session = requestWrapper.getUserHttpSession();
         if (session != null) {
             SessionState sessionState = session.getSessionState();
