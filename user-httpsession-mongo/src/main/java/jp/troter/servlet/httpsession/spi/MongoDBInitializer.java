@@ -21,4 +21,6 @@ public abstract class MongoDBInitializer {
     }
 
     public abstract DB getDB();
+
+    public abstract int getSessionTimeout();
 }

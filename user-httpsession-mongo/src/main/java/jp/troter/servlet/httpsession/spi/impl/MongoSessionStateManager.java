@@ -100,7 +100,7 @@ public class MongoSessionStateManager extends SessionStateManager {
 
     @Override
     public int getTimeoutSecond() {
-        return 0;
+        return getMongoDBInitializer().getSessionTimeout();
     }
 
     protected DBObject findBySessionId(String sessionId) {
