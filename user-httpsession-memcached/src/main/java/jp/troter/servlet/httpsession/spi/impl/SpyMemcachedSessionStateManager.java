@@ -1,5 +1,7 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,21 +25,22 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
 
     protected SessionValueSerializer serializer;
 
-    @SuppressWarnings("unchecked")
     @Override
     public SessionState loadState(String sessionId) {
         Map<String, Object> attributes = new HashMap<String, Object>();
+        long lastAccessedTime = new Date().getTime();
         try {
             Object obj = getSpyMemcachedInitializer().getMemcachedClient().get(key(sessionId));
             if (obj == null) { return new DefaultSessionState(attributes); }
-            Map<String, Object> rawAttributes = (Map<String, Object>) obj;
-            attributes.putAll(rawAttributes);
+            Cell cell = (Cell) obj;
+            attributes.putAll(cell.getAttributes());
+            lastAccessedTime = cell.getLastAccessedTime();
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at get method. session_id=" + sessionId, e);
             removeState(sessionId);
         }
 
-        return new DefaultSessionState(attributes);
+        return new DefaultSessionState(attributes, lastAccessedTime);
     }
 
     @Override
@@ -49,8 +52,10 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
             if (value == null) { continue; }
             attributes.put(name, value);
         }
+
+        Cell cell = new Cell(attributes, sessionState.getCreationTime());
         try {
-            getSpyMemcachedInitializer().getMemcachedClient().set(key(sessionId), getTimeoutSecond(), attributes);
+            getSpyMemcachedInitializer().getMemcachedClient().set(key(sessionId), getTimeoutSecond(), cell);
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at set method. session_id=" + sessionId, e);
         }
@@ -86,5 +91,25 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
             serializer = SessionValueSerializer.newInstance();
         }
         return serializer;
+    }
+
+    private static class Cell implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        Map<String, Object> attributes;
+        long lastAccessedTime;
+
+        public Cell(Map<String, Object> attributes, long lastAccessedTime) {
+            this.attributes = attributes;
+            this.lastAccessedTime = lastAccessedTime;
+        }
+
+        public Map<String, Object> getAttributes() {
+            return attributes;
+        }
+
+        public long getLastAccessedTime() {
+            return lastAccessedTime;
+        }
     }
 }
