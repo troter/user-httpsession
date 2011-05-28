@@ -9,13 +9,16 @@ import net.spy.memcached.MemcachedClient;
 
 public class SpyMemcachedInitializerImpl extends SpyMemcachedInitializer {
 
+    MemcachedClient c = null;
+
     @Override
     public MemcachedClient getMemcachedClient() {
-        MemcachedClient c = null;
-        try {
-            c = new MemcachedClient(new InetSocketAddress("192.168.115.93", 11211));
-        } catch (IOException e) {
-            return null;
+        if (c == null) {
+            try {
+                c = new MemcachedClient(new InetSocketAddress("localhost", 11211));
+            } catch (IOException e) {
+                return null;
+            }
         }
         return c;
     }
