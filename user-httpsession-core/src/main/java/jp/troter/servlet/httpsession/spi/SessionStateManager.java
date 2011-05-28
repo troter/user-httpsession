@@ -36,11 +36,11 @@ public abstract class SessionStateManager {
     public abstract SessionState loadState(String sessionId);
 
     /**
-     * update {@link SessionState} to miscellaneous storage.
+     * save {@link SessionState} to miscellaneous storage.
      * @param sessionId
      * @param sessionState
      */
-    public abstract void updateState(String sessionId, SessionState sessionState);
+    public abstract void saveState(String sessionId, SessionState sessionState);
 
     /**
      * remove {@link SessionState} from miscellaneous storage.

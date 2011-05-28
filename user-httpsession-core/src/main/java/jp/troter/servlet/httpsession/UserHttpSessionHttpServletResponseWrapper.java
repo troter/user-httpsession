@@ -59,7 +59,7 @@ public class UserHttpSessionHttpServletResponseWrapper extends
         if (session != null) {
             SessionState sessionState = session.getSessionState();
             if (sessionState != null) {
-                sessionStateManager.updateState(session.getId(), sessionState);
+                sessionStateManager.saveState(session.getId(), sessionState);
             }
         }
     }

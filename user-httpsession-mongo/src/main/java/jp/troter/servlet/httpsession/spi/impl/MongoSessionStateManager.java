@@ -46,7 +46,7 @@ public class MongoSessionStateManager extends SessionStateManager {
     }
 
     @Override
-    public void updateState(String sessionId, SessionState sessionState) {
+    public void saveState(String sessionId, SessionState sessionState) {
         BasicDBObject attributes = new BasicDBObject();
 
         for (Enumeration<?> e = sessionState.getAttributeNames(); e.hasMoreElements();) {

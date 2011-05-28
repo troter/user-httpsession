@@ -14,8 +14,8 @@ public class DefaultSessionStateManager extends SessionStateManager {
     private static Logger log = LoggerFactory.getLogger(DefaultSessionStateManager.class);
 
     @Override
-    public void updateState(String sessionId, SessionState sessionState) {
-        log.error("DefaultSessionStateManager.updateState is stub.");
+    public void saveState(String sessionId, SessionState sessionState) {
+        log.error("DefaultSessionStateManager.saveState is stub.");
     }
 
     @Override
@@ -31,7 +31,7 @@ public class DefaultSessionStateManager extends SessionStateManager {
 
     @Override
     public int getTimeoutSecond() {
-        log.error("DefaultSessionStateManager.getSessionTimeoutSecond is stub.");
+        log.error("DefaultSessionStateManager.getTimeoutSecond is stub.");
         return 0;
     }
 }

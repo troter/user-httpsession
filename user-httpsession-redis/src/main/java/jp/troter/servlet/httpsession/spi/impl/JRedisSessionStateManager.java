@@ -12,7 +12,7 @@ public class JRedisSessionStateManager extends SessionStateManager {
     }
 
     @Override
-    public void updateState(String sessionId, SessionState sessionState) {
+    public void saveState(String sessionId, SessionState sessionState) {
         // TODO Auto-generated method stub
 
     }

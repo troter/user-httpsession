@@ -41,7 +41,7 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
     }
 
     @Override
-    public void updateState(String sessionId, SessionState sessionState) {
+    public void saveState(String sessionId, SessionState sessionState) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         for (Enumeration<?> e = sessionState.getAttributeNames(); e.hasMoreElements();) {
             String name = (String)e.nextElement();
