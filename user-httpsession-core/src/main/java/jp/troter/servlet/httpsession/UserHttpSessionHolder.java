@@ -39,7 +39,7 @@ public class UserHttpSessionHolder {
 
         boolean needNewSession = false;
         String sessionId = request.getRequestedSessionId();
-        if (sessionId == null || invalidate()) {
+        if (sessionId == null) {
             needNewSession = true;
             sessionId = getSessionIdGenerator().generateSessionId(request);
         }
