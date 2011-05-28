@@ -11,6 +11,8 @@ public interface SessionState {
 
     long getLastAccessedTime();
 
+    boolean isNew();
+
     Enumeration<?> getAttributeNames();
 
     void setAttribute(String name, Object value);

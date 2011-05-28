@@ -1,6 +1,7 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class MongoSessionStateManager extends SessionStateManager {
             }
         }
 
-        return new DefaultSessionState(attributes);
+        return new DefaultSessionState(attributes, new Date().getTime(), false);
     }
 
     @Override

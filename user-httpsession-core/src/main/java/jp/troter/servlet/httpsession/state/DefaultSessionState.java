@@ -14,13 +14,12 @@ public class DefaultSessionState implements SessionState {
 
     protected long lastAccessedTime;
 
-    public DefaultSessionState(Map<String, Object> map) {
-        this(map, 0);
-    }
+    protected boolean isNew;
 
-    public DefaultSessionState(Map<String, Object> map, long lastAccessedTime) {
+    public DefaultSessionState(Map<String, Object> map, long lastAccessedTime, boolean isNew) {
         this.map = new ConcurrentHashMap<String, Object>(map);
         this.lastAccessedTime = lastAccessedTime;
+        this.isNew = isNew;
     }
 
     @Override
@@ -46,6 +45,11 @@ public class DefaultSessionState implements SessionState {
     @Override
     public Object getAttribute(String name) {
         return map.get(name);
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew;
     }
 
 }

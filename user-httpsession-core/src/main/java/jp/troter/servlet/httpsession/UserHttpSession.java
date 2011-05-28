@@ -25,15 +25,12 @@ public class UserHttpSession implements HttpSession {
 
     protected ServletContext servletContext;
 
-    protected final boolean isNew;
-
     protected int maxInactiveInterval = Integer.MAX_VALUE;
 
     public UserHttpSession(UserHttpSessionHttpServletRequestWrapper request, String id,
-            SessionStateManager sessionStateManager, ServletContext servletContext, boolean isNew) {
+            SessionStateManager sessionStateManager, ServletContext servletContext) {
         this.request = request;
         this.id = id;
-        this.isNew = isNew;
         this.servletContext = servletContext;
         this.sessionStateManager = sessionStateManager;
     }
@@ -135,7 +132,7 @@ public class UserHttpSession implements HttpSession {
 
     @Override
     public boolean isNew() {
-        return isNew;
+        return getSessionState().isNew();
     }
 
 }

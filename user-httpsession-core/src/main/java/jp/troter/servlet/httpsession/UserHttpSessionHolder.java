@@ -58,7 +58,7 @@ public class UserHttpSessionHolder {
             if (retry > retryLimit) {
                 throw new RuntimeException("cannot create session.");
             }
-            UserHttpSession session = newUserHttpSession(request, currentSessionId, sessionStateManager, servletContext, isNew);
+            UserHttpSession session = newUserHttpSession(request, currentSessionId, sessionStateManager, servletContext);
 
             boolean isConflictSessionId = isNew && getSessionValidator().isExistsMarker(session);
             if (! isConflictSessionId) {
@@ -77,8 +77,8 @@ public class UserHttpSessionHolder {
     }
 
     protected UserHttpSession newUserHttpSession(UserHttpSessionHttpServletRequestWrapper request, String id,
-            SessionStateManager sessionStateManager, ServletContext servletContext, boolean isNew) {
-        return new UserHttpSession(request, id, sessionStateManager, servletContext, isNew);
+            SessionStateManager sessionStateManager, ServletContext servletContext) {
+        return new UserHttpSession(request, id, sessionStateManager, servletContext);
     }
 
     /**

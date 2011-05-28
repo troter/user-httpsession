@@ -1,5 +1,6 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
@@ -26,7 +27,7 @@ public class DefaultSessionStateManager extends SessionStateManager {
     @Override
     public SessionState loadState(String sessionId) {
         log.error("DefaultSessionStateManager.loadState is stub.");
-        return new DefaultSessionState(new HashMap<String, Object>());
+        return new DefaultSessionState(new HashMap<String, Object>(), new Date().getTime(), true);
     }
 
     @Override
