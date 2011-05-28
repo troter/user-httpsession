@@ -12,6 +12,7 @@ import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,7 @@ public class MongoSessionStateManager extends SessionStateManager {
         for (String name : rawAttributes.keySet()) {
             try {
                 byte[] objectData = (byte[])rawAttributes.get(name);
-                attributes.put(name, getSerializer().deserialize(objectData));
+                attributes.put(decodeFieldName(name), getSerializer().deserialize(objectData));
             } catch (RuntimeException e) {
                 log.warn("undeserialize object name: " + name, e);
             }
@@ -76,14 +77,14 @@ public class MongoSessionStateManager extends SessionStateManager {
             Object value = sessionState.getAttribute(name);
             if (value == null) { continue; }
             try {
-                attributes.put(name, getSerializer().serialize((Serializable)value));
+                attributes.put(encodeFieldName(name), getSerializer().serialize((Serializable)value));
             } catch (RuntimeException x) {
                 log.warn("unserialize object name: " + name, x);
             }
         }
 
         try {
-            insert(sessionId, attributes, sessionState.getCreationTime());
+            save(sessionId, attributes, sessionState.getCreationTime());
         } catch (RuntimeException e) {
             log.warn("MongoDB exception occurred at insert method. session_id=" + sessionId, e);
         }
@@ -114,18 +115,30 @@ public class MongoSessionStateManager extends SessionStateManager {
         return null;
     }
 
-    protected WriteResult insert(String sessionId, BasicDBObject attributes, long creationTime) {
+    protected WriteResult save(String sessionId, BasicDBObject attributes, long creationTime) {
         BasicDBObject session = new BasicDBObject();
+        DBObject obj = findBySessionId(sessionId);
+        if (obj != null) {
+            session.put("_id", obj.get("_id"));
+        }
         session.put("session_id", sessionId);
         session.put(getAttributesKey(), attributes);
         session.put(getLastAccessedTimeKey(), creationTime);
-        return getSessionCollection().insert(session);
+        return getSessionCollection().save(session);
     }
 
     protected WriteResult remove(String sessionId) {
         DBObject obj = findBySessionId(sessionId);
         if (obj == null) { return null; }
         return getSessionCollection().remove(obj);
+    }
+
+    protected String encodeFieldName(String name) {
+        return StringUtils.replace(name, ".", "[dot]");
+    }
+
+    protected String decodeFieldName(String name) {
+        return StringUtils.replace(name, "[dot]", ".");
     }
 
     protected DBCollection getSessionCollection() {
