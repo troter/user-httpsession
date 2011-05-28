@@ -40,6 +40,14 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/META-INF/services/*</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <!-- maven-antrun-plugin -->
       <plugin>
@@ -58,6 +66,40 @@
             <goals>
               <goal>run</goal>
             </goals>
+          </execution>
+          <execution>
+            <id>copy-meta-inf-services</id>
+            <phase>generate-resouces</phase>
+            <configuration>
+              <tasks>
+                <mkdir dir="src/main/webapp/WEB-INF/classes/META-INF"/>
+                <copy dir="src/main/webapp/WEB-INF/classes/META-INF/serivces">
+                  <fileset dir="src/main/java/META-INF/services"/>
+                </copy>
+              </tasks>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/main/webapp/WEB-INF/lib</outputDirectory>
+              <excludeScope>provided</excludeScope>
+              <overWriteIfNewer>true</overWriteIfNewer>
+              <overWriteReleases>true</overWriteReleases>
+              <overWriteSnapshots>true</overWriteSnapshots>
+            </configuration>
           </execution>
         </executions>
       </plugin>
