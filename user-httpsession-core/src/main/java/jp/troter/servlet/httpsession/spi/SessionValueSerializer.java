@@ -29,7 +29,20 @@ public abstract class SessionValueSerializer {
         return deserialize(binary);
     }
 
+    /**
+     * deserialize.
+     * @param objectData
+     * @return
+     * @throws UserHttpSessionSerializationException
+     * @throws IllegalArgumentException
+     */
     public abstract Object deserialize(byte[] objectData) throws UserHttpSessionSerializationException,IllegalArgumentException;
 
+    /**
+     * serialize.
+     * @param obj
+     * @return
+     * @throws UserHttpSessionSerializationException
+     */
     public abstract byte[] serialize(Serializable obj) throws UserHttpSessionSerializationException;
 }

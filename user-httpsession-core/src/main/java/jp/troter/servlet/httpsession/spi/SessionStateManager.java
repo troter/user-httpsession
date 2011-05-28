@@ -28,11 +28,29 @@ public abstract class SessionStateManager {
         return sessionStateManager;
     }
 
+    /**
+     * load {@link SessionState} from miscellaneous storage.
+     * @param sessionId
+     * @return loaded {@link SessionState}
+     */
     public abstract SessionState loadState(String sessionId);
 
+    /**
+     * update {@link SessionState} to miscellaneous storage.
+     * @param sessionId
+     * @param sessionState
+     */
     public abstract void updateState(String sessionId, SessionState sessionState);
 
+    /**
+     * remove {@link SessionState} from miscellaneous storage.
+     * @param sessionId
+     */
     public abstract void removeState(String sessionId);
 
+    /**
+     * session timeout second.
+     * @return session timeout second.
+     */
     public abstract int getTimeoutSecond();
 }
