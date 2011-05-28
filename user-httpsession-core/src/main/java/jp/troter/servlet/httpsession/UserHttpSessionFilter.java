@@ -27,9 +27,9 @@ public class UserHttpSessionFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
         SessionStateManager ssm = getSessionStateManager();
-        UserHttpSessionHttpServletRequestWrapper requestWrapper = new UserHttpSessionHttpServletRequestWrapper(
+        UserHttpSessionHttpServletRequestWrapper requestWrapper = newUserHttpSessionHttpServletRequestWrapper(
                 (HttpServletRequest) request, (HttpServletResponse) response, ssm);
-        UserHttpSessionHttpServletResponseWrapper responseWrapper = new UserHttpSessionHttpServletResponseWrapper(
+        UserHttpSessionHttpServletResponseWrapper responseWrapper = newUserHttpSessionHttpServletResponseWrapper(
                 (HttpServletResponse) response, requestWrapper, ssm);
 
         try {
@@ -37,6 +37,20 @@ public class UserHttpSessionFilter implements Filter {
         } finally {
             responseWrapper.updateState(ssm);
         }
+    }
+
+    protected UserHttpSessionHttpServletRequestWrapper newUserHttpSessionHttpServletRequestWrapper(
+            HttpServletRequest request, HttpServletResponse response,
+            SessionStateManager sessionStateManager
+    ) {
+        return new UserHttpSessionHttpServletRequestWrapper(request, response, sessionStateManager);
+    }
+
+    protected UserHttpSessionHttpServletResponseWrapper newUserHttpSessionHttpServletResponseWrapper(
+            HttpServletResponse response, UserHttpSessionHttpServletRequestWrapper requestWrapper,
+            SessionStateManager sessionStateManager
+    ) {
+        return new UserHttpSessionHttpServletResponseWrapper(response, requestWrapper, sessionStateManager);
     }
 
     protected SessionStateManager getSessionStateManager() {
