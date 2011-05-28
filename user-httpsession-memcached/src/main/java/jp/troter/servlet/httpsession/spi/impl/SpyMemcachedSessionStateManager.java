@@ -31,7 +31,7 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
         long lastAccessedTime = new Date().getTime();
         try {
             Object obj = getSpyMemcachedInitializer().getMemcachedClient().get(key(sessionId));
-            if (obj == null) { return new DefaultSessionState(attributes, lastAccessedTime, true); }
+            if (obj == null) { return new DefaultSessionState(); }
             Cell cell = (Cell) obj;
             attributes.putAll(cell.getAttributes());
             lastAccessedTime = cell.getLastAccessedTime();

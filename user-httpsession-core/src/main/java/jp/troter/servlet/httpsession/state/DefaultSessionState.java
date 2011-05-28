@@ -16,6 +16,10 @@ public class DefaultSessionState implements SessionState {
 
     protected boolean isNew;
 
+    public DefaultSessionState() {
+        this(Collections.<String, Object>emptyMap(), new Date().getTime(), true);
+    }
+
     public DefaultSessionState(Map<String, Object> map, long lastAccessedTime, boolean isNew) {
         this.map = new ConcurrentHashMap<String, Object>(map);
         this.lastAccessedTime = lastAccessedTime;
