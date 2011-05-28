@@ -107,8 +107,7 @@ public class MongoSessionStateManager extends SessionStateManager {
     protected DBObject findBySessionId(String sessionId) {
         BasicDBObject query = new BasicDBObject();
         query.put("session_id", sessionId);
-        DBCollection coll = getSessionCollection();
-        DBCursor cur = coll.find(query);
+        DBCursor cur = getSessionCollection().find(query);
         while(cur.hasNext()) {
             return cur.next();
         }
@@ -127,10 +126,13 @@ public class MongoSessionStateManager extends SessionStateManager {
         return getSessionCollection().save(session);
     }
 
-    protected WriteResult remove(String sessionId) {
-        DBObject obj = findBySessionId(sessionId);
-        if (obj == null) { return null; }
-        return getSessionCollection().remove(obj);
+    protected void remove(String sessionId) {
+        DBObject query = new BasicDBObject();
+        query.put("session_id", sessionId);
+        DBCursor cursor = getSessionCollection().find(query);
+        while (cursor.hasNext()) {
+            getSessionCollection().remove(cursor.next());
+        }
     }
 
     protected String encodeFieldName(String name) {
