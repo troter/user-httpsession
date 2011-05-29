@@ -6,7 +6,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.troter.servlet.httpsession.exception.UserHttpSessionSerializationException;
 import jp.troter.servlet.httpsession.spi.JRedisInitializer;
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
@@ -39,7 +38,7 @@ public class JRedisSessionStateManager extends SessionStateManager {
             Cell cell = (Cell)DefaultCodec.decode(cellData);
             maxInactiveInterval = cell.getMaxInactiveInterval();
             lastAccessedTime = cell.getLastAccessedTime();
-            if (lastAccessedTime > getTimeoutTime()) { return new DefaultSessionState(maxInactiveInterval); }
+            if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) { return new DefaultSessionState(getDefaultTimeoutSecond()); }
             attributes.putAll(cell.getAttributes());
         } catch (RedisException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);

@@ -62,6 +62,15 @@ public abstract class SessionStateManager {
      * @return
      */
     public long getTimeoutTime() {
-        return new Date().getTime() + TimeUnit.SECONDS.toMillis(getDefaultTimeoutSecond());
+        return getTimeoutTime(getDefaultTimeoutSecond());
+    }
+
+    /**
+     * timeout millisecond.
+     * @param maxInactiveInterval
+     * @return
+     */
+    public long getTimeoutTime(int maxInactiveInterval) {
+        return new Date().getTime() + TimeUnit.SECONDS.toMillis(maxInactiveInterval);
     }
 }

@@ -48,7 +48,7 @@ public class MongoSessionStateManager extends SessionStateManager {
             removeState(sessionId);
         }
 
-        return new DefaultSessionState(getDefaultTimeoutSecond());
+        return newEmptySessionState();
     }
 
     @Override
@@ -82,11 +82,15 @@ public class MongoSessionStateManager extends SessionStateManager {
         return getInitializer().getDefaultTimeoutSecond();
     }
 
+    protected SessionState newEmptySessionState() {
+        return new DefaultSessionState(getDefaultTimeoutSecond());
+    }
+
     protected SessionState restoredSessionState(DBObject obj) {
         int maxInactiveInterval = ((Integer)obj.get(getMaxInactiveIntervalKey())).intValue();
         long lastAccessedTime = ((Long)obj.get(getLastAccessedTimeKey())).longValue();
-        if (lastAccessedTime > getTimeoutTime()) {
-            return new DefaultSessionState(getDefaultTimeoutSecond());
+        if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) {
+            return newEmptySessionState();
         }
         DBObject serializedAttributes = (DBObject) obj.get(getAttributesKey());
         Map<String, Object> attributes = new HashMap<String, Object>();
