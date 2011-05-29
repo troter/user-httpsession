@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultSessionState implements SessionState {
 
-    Map<String, Object> map;
+    Map<String, Object> attributes;
 
     protected final long creationTime = new Date().getTime();
 
@@ -20,8 +20,8 @@ public class DefaultSessionState implements SessionState {
         this(Collections.<String, Object>emptyMap(), new Date().getTime(), true);
     }
 
-    public DefaultSessionState(Map<String, Object> map, long lastAccessedTime, boolean isNew) {
-        this.map = new ConcurrentHashMap<String, Object>(map);
+    public DefaultSessionState(Map<String, Object> attributes, long lastAccessedTime, boolean isNew) {
+        this.attributes = new ConcurrentHashMap<String, Object>(attributes);
         this.lastAccessedTime = lastAccessedTime;
         this.isNew = isNew;
     }
@@ -38,17 +38,17 @@ public class DefaultSessionState implements SessionState {
 
     @Override
     public Enumeration<?> getAttributeNames() {
-        return Collections.enumeration(map.keySet());
+        return Collections.enumeration(attributes.keySet());
     }
 
     @Override
     public void setAttribute(String name, Object value) {
-        map.put(name, value);
+        attributes.put(name, value);
     }
 
     @Override
     public Object getAttribute(String name) {
-        return map.get(name);
+        return attributes.get(name);
     }
 
     @Override
