@@ -1,7 +1,6 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,35 +23,22 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
 
     @Override
     public SessionState loadState(String sessionId) {
-        Map<String, Object> attributes = new HashMap<String, Object>();
-        long lastAccessedTime = new Date().getTime();
-        int maxInactiveInterval = getDefaultTimeoutSecond();
         try {
             Object obj = getInitializer().getMemcachedClient().get(key(sessionId));
-            if (obj == null) { return new DefaultSessionState(maxInactiveInterval); }
-            Cell cell = (Cell) obj;
-            attributes.putAll(cell.getAttributes());
-            lastAccessedTime = cell.getLastAccessedTime();
-            maxInactiveInterval = cell.getMaxInactiveInterval();
+            if (obj != null) {
+                return restoredSessionState((Cell) obj);
+            }
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at get method. session_id=" + sessionId, e);
             removeState(sessionId);
         }
 
-        return new DefaultSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
+        return newEmptySessionState();
     }
 
     @Override
     public void saveState(String sessionId, SessionState sessionState) {
-        Map<String, Object> attributes = new HashMap<String, Object>();
-        for (Enumeration<?> e = sessionState.getAttributeNames(); e.hasMoreElements();) {
-            String name = (String)e.nextElement();
-            Object value = sessionState.getAttribute(name);
-            if (value == null) { continue; }
-            attributes.put(name, value);
-        }
-
-        Cell cell = new Cell(attributes, sessionState.getCreationTime(), sessionState.getMaxInactiveInterval());
+        Cell cell = storedSessionState(sessionState);
         try {
             getInitializer().getMemcachedClient().set(key(sessionId), cell.getMaxInactiveInterval(), cell);
         } catch (RuntimeException e) {
@@ -72,6 +58,30 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
     @Override
     public int getDefaultTimeoutSecond() {
         return getInitializer().getDefaultTimeoutSecond();
+    }
+
+    protected SessionState newEmptySessionState() {
+        return new DefaultSessionState(getDefaultTimeoutSecond());
+    }
+
+    protected SessionState restoredSessionState(Cell cell) {
+        int maxInactiveInterval = cell.getMaxInactiveInterval();
+        long lastAccessedTime = cell.getLastAccessedTime();
+        if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) {
+            return newEmptySessionState();
+        }
+        return new DefaultSessionState(cell.getAttributes(), lastAccessedTime, false, maxInactiveInterval);
+    }
+
+    protected Cell storedSessionState(SessionState sessionState) {
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        for (Enumeration<?> e = sessionState.getAttributeNames(); e.hasMoreElements();) {
+            String name = (String)e.nextElement();
+            Object value = sessionState.getAttribute(name);
+            if (value == null) { continue; }
+            attributes.put(name, value);
+        }
+        return new Cell(attributes, sessionState.getCreationTime(), sessionState.getMaxInactiveInterval());
     }
 
     protected String key(String sessionId) {
