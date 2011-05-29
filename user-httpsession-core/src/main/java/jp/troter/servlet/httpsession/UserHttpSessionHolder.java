@@ -43,7 +43,6 @@ public class UserHttpSessionHolder {
         }
 
         session = createHttpSession(sessionId, needNewSession);
-
         return session;
     }
 

@@ -148,6 +148,7 @@ public class MongoSessionStateManager extends SessionStateManager {
     protected String getMaxInactiveIntervalKey() {
         return MAX_INACTIVE_INTERVAL_KEY;
     }
+
     protected MongoDBInitializer getInitializer() {
         if (initializer == null) {
             initializer = MongoDBInitializer.newInstance();

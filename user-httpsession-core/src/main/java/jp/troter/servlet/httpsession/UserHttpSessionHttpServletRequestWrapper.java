@@ -103,7 +103,7 @@ public class UserHttpSessionHttpServletRequestWrapper extends
     ) {
         return new UserHttpSessionHolder(request, sessionStateManager);
     }
-    
+
     protected SessionCookieHandler getSessionCookieHandler() {
         if (sessionCookieHandler == null) {
             sessionCookieHandler = SessionCookieHandler.newInstance();
