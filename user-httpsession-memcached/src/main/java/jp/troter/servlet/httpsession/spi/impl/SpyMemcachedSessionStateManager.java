@@ -52,7 +52,7 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
 
         Cell cell = new Cell(attributes, sessionState.getCreationTime());
         try {
-            getInitializer().getMemcachedClient().set(key(sessionId), getTimeoutSecond(), cell);
+            getInitializer().getMemcachedClient().set(key(sessionId), getDefaultTimeoutSecond(), cell);
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at set method. session_id=" + sessionId, e);
         }
@@ -68,8 +68,8 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
     }
 
     @Override
-    public int getTimeoutSecond() {
-        return getInitializer().getTimeoutSecond();
+    public int getDefaultTimeoutSecond() {
+        return getInitializer().getDefaultTimeoutSecond();
     }
 
     protected String key(String sessionId) {

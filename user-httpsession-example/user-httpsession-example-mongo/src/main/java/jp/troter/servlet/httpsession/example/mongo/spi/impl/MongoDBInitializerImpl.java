@@ -27,7 +27,7 @@ public class MongoDBInitializerImpl extends MongoDBInitializer {
     }
 
     @Override
-    public int getSessionTimeout() {
+    public int getDefaultTimeoutSecond() {
         return Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
     }
 }

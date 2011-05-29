@@ -76,8 +76,8 @@ public class MongoSessionStateManager extends SessionStateManager {
     }
 
     @Override
-    public int getTimeoutSecond() {
-        return getInitializer().getSessionTimeout();
+    public int getDefaultTimeoutSecond() {
+        return getInitializer().getDefaultTimeoutSecond();
     }
 
     protected SessionState restoredSessionState(DBObject obj) {

@@ -24,7 +24,7 @@ public class SpyMemcachedInitializerImpl extends SpyMemcachedInitializer {
     }
 
     @Override
-    public int getTimeoutSecond() {
+    public int getDefaultTimeoutSecond() {
         return Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
     }
 

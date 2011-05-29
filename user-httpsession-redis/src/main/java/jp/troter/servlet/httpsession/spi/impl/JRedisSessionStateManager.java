@@ -80,8 +80,8 @@ public class JRedisSessionStateManager extends SessionStateManager {
     }
 
     @Override
-    public int getTimeoutSecond() {
-        return getInitializer().getSessionTimeout();
+    public int getDefaultTimeoutSecond() {
+        return getInitializer().getDefaultTimeoutSecond();
     }
 
     protected String key(String sessionId) {

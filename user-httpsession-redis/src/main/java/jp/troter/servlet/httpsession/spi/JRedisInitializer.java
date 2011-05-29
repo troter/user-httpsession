@@ -22,5 +22,5 @@ public abstract class JRedisInitializer {
 
     public abstract JRedis getJRedis();
 
-    public abstract int getSessionTimeout();
+    public abstract int getDefaultTimeoutSecond();
 }

@@ -22,5 +22,5 @@ public abstract class MongoDBInitializer {
 
     public abstract DBCollection getDBCollection();
 
-    public abstract int getSessionTimeout();
+    public abstract int getDefaultTimeoutSecond();
 }

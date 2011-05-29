@@ -22,5 +22,5 @@ public abstract class SpyMemcachedInitializer {
 
     public abstract MemcachedClient getMemcachedClient();
 
-    public abstract int getTimeoutSecond();
+    public abstract int getDefaultTimeoutSecond();
 }

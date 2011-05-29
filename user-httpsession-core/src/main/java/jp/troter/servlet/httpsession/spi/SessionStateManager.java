@@ -55,13 +55,13 @@ public abstract class SessionStateManager {
      * session timeout second.
      * @return session timeout second.
      */
-    public abstract int getTimeoutSecond();
+    public abstract int getDefaultTimeoutSecond();
 
     /**
      * timeout millisecond.
      * @return
      */
     public long getTimeoutTime() {
-        return new Date().getTime() + TimeUnit.SECONDS.toMillis(getTimeoutSecond());
+        return new Date().getTime() + TimeUnit.SECONDS.toMillis(getDefaultTimeoutSecond());
     }
 }
