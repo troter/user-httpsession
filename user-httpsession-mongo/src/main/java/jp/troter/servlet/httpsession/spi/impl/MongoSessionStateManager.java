@@ -1,7 +1,6 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +19,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.WriteResult;
 
 public class MongoSessionStateManager extends SessionStateManager {
 
@@ -36,40 +34,72 @@ public class MongoSessionStateManager extends SessionStateManager {
 
     @Override
     public SessionState loadState(String sessionId) {
-        Map<String, Object> attributes = new HashMap<String, Object>();
-        long lastAccessedTime = new Date().getTime();
+        DBObject query = new BasicDBObject();
+        query.put("session_id", sessionId);
+        DBCursor cursor = getSessionCollection().find(query);
         try {
-            DBObject obj = findBySessionId(sessionId);
-            if (obj == null) { new DefaultSessionState(); }
-
-            lastAccessedTime = ((Long)obj.get(getLastAccessedTimeKey())).longValue();
-            if (lastAccessedTime > getTimeoutTime()) { return new DefaultSessionState(); }
-
-            attributes.putAll(toDeserializeMap((DBObject)obj.get(getAttributesKey())));
+            while(cursor.hasNext()) {
+                return restoredSessionState(cursor.next());
+            }
         } catch (RuntimeException e) {
             log.warn("MongoDB exception occurred at find method. session_id=" + sessionId, e);
             removeState(sessionId);
         }
 
-        return new DefaultSessionState(attributes, lastAccessedTime, false);
+        return new DefaultSessionState();
     }
 
-    protected Map<String, Object> toDeserializeMap(DBObject rawAttributes) {
+    @Override
+    public void saveState(String sessionId, SessionState sessionState) {
+        removeState(sessionId);
+        DBObject session = storedSessionState(sessionState);
+        session.put("session_id", sessionId);
+        try {
+            getSessionCollection().save(session);
+        } catch (RuntimeException e) {
+            log.warn("MongoDB exception occurred at insert method. session_id=" + sessionId, e);
+        }
+    }
+
+    @Override
+    public void removeState(String sessionId) {
+        DBObject query = new BasicDBObject();
+        query.put("session_id", sessionId);
+        DBCursor cursor = getSessionCollection().find(query);
+        try {
+            while (cursor.hasNext()) {
+                getSessionCollection().remove(cursor.next());
+            }
+        } catch (RuntimeException e) {
+            log.warn("MongoDB exception occurred at insert method. session_id=" + sessionId, e);
+        }
+    }
+
+    @Override
+    public int getTimeoutSecond() {
+        return getInitializer().getSessionTimeout();
+    }
+
+    protected SessionState restoredSessionState(DBObject obj) {
+        long lastAccessedTime = ((Long)obj.get(getLastAccessedTimeKey())).longValue();
+        if (lastAccessedTime > getTimeoutTime()) {
+            return new DefaultSessionState();
+        }
+        DBObject serializedAttributes = (DBObject) obj.get(getAttributesKey());
         Map<String, Object> attributes = new HashMap<String, Object>();
-        for (String name : rawAttributes.keySet()) {
+        for (String name : serializedAttributes.keySet()) {
             try {
-                byte[] objectData = (byte[])rawAttributes.get(name);
+                byte[] objectData = (byte[])serializedAttributes.get(name);
                 attributes.put(decodeFieldName(name), getSerializer().deserialize(objectData));
             } catch (RuntimeException e) {
                 log.warn("undeserialize object name: " + name, e);
             }
         }
-        return attributes;
+        return new DefaultSessionState(attributes, lastAccessedTime, false);
     }
 
-    @Override
-    public void saveState(String sessionId, SessionState sessionState) {
-        BasicDBObject attributes = new BasicDBObject();
+    protected DBObject storedSessionState(SessionState sessionState) {
+        DBObject attributes = new BasicDBObject();
         for (Enumeration<?> e = sessionState.getAttributeNames(); e.hasMoreElements();) {
             String name = (String)e.nextElement();
             Object value = sessionState.getAttribute(name);
@@ -81,56 +111,10 @@ public class MongoSessionStateManager extends SessionStateManager {
             }
         }
 
-        try {
-            save(sessionId, attributes, sessionState.getCreationTime());
-        } catch (RuntimeException e) {
-            log.warn("MongoDB exception occurred at insert method. session_id=" + sessionId, e);
-        }
-    }
-
-    @Override
-    public void removeState(String sessionId) {
-        try {
-            remove(sessionId);
-        } catch (RuntimeException e) {
-            log.warn("MongoDB exception occurred at insert method. session_id=" + sessionId, e);
-        }
-    }
-
-    @Override
-    public int getTimeoutSecond() {
-        return getInitializer().getSessionTimeout();
-    }
-
-    protected DBObject findBySessionId(String sessionId) {
-        BasicDBObject query = new BasicDBObject();
-        query.put("session_id", sessionId);
-        DBCursor cur = getSessionCollection().find(query);
-        while(cur.hasNext()) {
-            return cur.next();
-        }
-        return null;
-    }
-
-    protected WriteResult save(String sessionId, BasicDBObject attributes, long creationTime) {
-        BasicDBObject session = new BasicDBObject();
-        DBObject obj = findBySessionId(sessionId);
-        if (obj != null) {
-            session.put("_id", obj.get("_id"));
-        }
-        session.put("session_id", sessionId);
+        DBObject session = new BasicDBObject();
         session.put(getAttributesKey(), attributes);
-        session.put(getLastAccessedTimeKey(), creationTime);
-        return getSessionCollection().save(session);
-    }
-
-    protected void remove(String sessionId) {
-        DBObject query = new BasicDBObject();
-        query.put("session_id", sessionId);
-        DBCursor cursor = getSessionCollection().find(query);
-        while (cursor.hasNext()) {
-            getSessionCollection().remove(cursor.next());
-        }
+        session.put(getLastAccessedTimeKey(), sessionState.getCreationTime());
+        return session;
     }
 
     protected String encodeFieldName(String name) {
