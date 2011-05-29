@@ -28,6 +28,8 @@ public class MongoSessionStateManager extends SessionStateManager {
 
     private static final String LAST_ACCESSED_TIME_KEY = "last_accessed_time";
 
+    private static final String MAX_INACTIVE_INTERVAL_KEY = "max_inactive_interval";
+
     protected MongoDBInitializer initializer;
 
     protected SessionValueSerializer serializer;
@@ -46,7 +48,7 @@ public class MongoSessionStateManager extends SessionStateManager {
             removeState(sessionId);
         }
 
-        return new DefaultSessionState();
+        return new DefaultSessionState(getDefaultTimeoutSecond());
     }
 
     @Override
@@ -81,9 +83,10 @@ public class MongoSessionStateManager extends SessionStateManager {
     }
 
     protected SessionState restoredSessionState(DBObject obj) {
+        int maxInactiveInterval = ((Integer)obj.get(getMaxInactiveIntervalKey())).intValue();
         long lastAccessedTime = ((Long)obj.get(getLastAccessedTimeKey())).longValue();
         if (lastAccessedTime > getTimeoutTime()) {
-            return new DefaultSessionState();
+            return new DefaultSessionState(getDefaultTimeoutSecond());
         }
         DBObject serializedAttributes = (DBObject) obj.get(getAttributesKey());
         Map<String, Object> attributes = new HashMap<String, Object>();
@@ -95,7 +98,7 @@ public class MongoSessionStateManager extends SessionStateManager {
                 log.warn("undeserialize object name: " + name, e);
             }
         }
-        return new DefaultSessionState(attributes, lastAccessedTime, false);
+        return new DefaultSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
     }
 
     protected DBObject storedSessionState(SessionState sessionState) {
@@ -114,6 +117,7 @@ public class MongoSessionStateManager extends SessionStateManager {
         DBObject session = new BasicDBObject();
         session.put(getAttributesKey(), attributes);
         session.put(getLastAccessedTimeKey(), sessionState.getCreationTime());
+        session.put(getMaxInactiveIntervalKey(), sessionState.getMaxInactiveInterval());
         return session;
     }
 
@@ -137,6 +141,9 @@ public class MongoSessionStateManager extends SessionStateManager {
         return LAST_ACCESSED_TIME_KEY;
     }
 
+    protected String getMaxInactiveIntervalKey() {
+        return MAX_INACTIVE_INTERVAL_KEY;
+    }
     protected MongoDBInitializer getInitializer() {
         if (initializer == null) {
             initializer = MongoDBInitializer.newInstance();

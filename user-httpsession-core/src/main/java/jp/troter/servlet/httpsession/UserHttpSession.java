@@ -64,12 +64,12 @@ public class UserHttpSession implements HttpSession {
 
     @Override
     public void setMaxInactiveInterval(int interval) {
-        maxInactiveInterval = interval;
+        getSessionState().setMaxInactiveInterval(interval);
     }
 
     @Override
     public int getMaxInactiveInterval() {
-        return maxInactiveInterval;
+        return getSessionState().getMaxInactiveInterval();
     }
 
     @Deprecated

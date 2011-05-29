@@ -26,18 +26,20 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
     public SessionState loadState(String sessionId) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         long lastAccessedTime = new Date().getTime();
+        int maxInactiveInterval = getDefaultTimeoutSecond();
         try {
             Object obj = getInitializer().getMemcachedClient().get(key(sessionId));
-            if (obj == null) { return new DefaultSessionState(); }
+            if (obj == null) { return new DefaultSessionState(maxInactiveInterval); }
             Cell cell = (Cell) obj;
             attributes.putAll(cell.getAttributes());
             lastAccessedTime = cell.getLastAccessedTime();
+            maxInactiveInterval = cell.getMaxInactiveInterval();
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at get method. session_id=" + sessionId, e);
             removeState(sessionId);
         }
 
-        return new DefaultSessionState(attributes, lastAccessedTime, false);
+        return new DefaultSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
     }
 
     @Override
@@ -50,9 +52,9 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
             attributes.put(name, value);
         }
 
-        Cell cell = new Cell(attributes, sessionState.getCreationTime());
+        Cell cell = new Cell(attributes, sessionState.getCreationTime(), sessionState.getMaxInactiveInterval());
         try {
-            getInitializer().getMemcachedClient().set(key(sessionId), getDefaultTimeoutSecond(), cell);
+            getInitializer().getMemcachedClient().set(key(sessionId), cell.getMaxInactiveInterval(), cell);
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at set method. session_id=" + sessionId, e);
         }
@@ -88,8 +90,9 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
 
         Map<String, Object> attributes;
         long lastAccessedTime;
+        int maxInactiveInterval;
 
-        public Cell(Map<String, Object> attributes, long lastAccessedTime) {
+        public Cell(Map<String, Object> attributes, long lastAccessedTime, int maxInactiveInterval) {
             this.attributes = attributes;
             this.lastAccessedTime = lastAccessedTime;
         }
@@ -100,6 +103,10 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
 
         public long getLastAccessedTime() {
             return lastAccessedTime;
+        }
+
+        public int getMaxInactiveInterval() {
+            return maxInactiveInterval;
         }
     }
 }

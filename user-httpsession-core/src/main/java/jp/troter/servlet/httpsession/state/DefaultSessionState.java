@@ -16,14 +16,17 @@ public class DefaultSessionState implements SessionState {
 
     protected boolean isNew;
 
-    public DefaultSessionState() {
-        this(Collections.<String, Object>emptyMap(), new Date().getTime(), true);
+    protected int maxInactiveInterval;
+
+    public DefaultSessionState(int maxInactiveInterval) {
+        this(Collections.<String, Object>emptyMap(), new Date().getTime(), true, maxInactiveInterval);
     }
 
-    public DefaultSessionState(Map<String, Object> attributes, long lastAccessedTime, boolean isNew) {
+    public DefaultSessionState(Map<String, Object> attributes, long lastAccessedTime, boolean isNew, int maxInactiveInterval) {
         this.attributes = new ConcurrentHashMap<String, Object>(attributes);
         this.lastAccessedTime = lastAccessedTime;
         this.isNew = isNew;
+        this.maxInactiveInterval = maxInactiveInterval;
     }
 
     @Override
@@ -56,4 +59,13 @@ public class DefaultSessionState implements SessionState {
         return isNew;
     }
 
+    @Override
+    public int getMaxInactiveInterval() {
+        return maxInactiveInterval;
+    }
+
+    @Override
+    public void setMaxInactiveInterval(int interval) {
+        maxInactiveInterval = interval;
+    }
 }

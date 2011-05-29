@@ -18,4 +18,8 @@ public interface SessionState {
     void setAttribute(String name, Object value);
 
     Object getAttribute(String name);
+
+    int getMaxInactiveInterval();
+
+    void setMaxInactiveInterval(int interval);
 }

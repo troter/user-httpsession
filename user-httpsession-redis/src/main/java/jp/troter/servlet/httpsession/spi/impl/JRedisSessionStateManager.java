@@ -32,12 +32,14 @@ public class JRedisSessionStateManager extends SessionStateManager {
     public SessionState loadState(String sessionId) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         long lastAccessedTime = new Date().getTime();
+        int maxInactiveInterval = getDefaultTimeoutSecond();
         try {
             byte[] cellData = getInitializer().getJRedis().get(key(sessionId));
-            if (cellData == null) { return new DefaultSessionState(); }
+            if (cellData == null) { return new DefaultSessionState(maxInactiveInterval); }
             Cell cell = (Cell)DefaultCodec.decode(cellData);
+            maxInactiveInterval = cell.getMaxInactiveInterval();
             lastAccessedTime = cell.getLastAccessedTime();
-            if (lastAccessedTime > getTimeoutTime()) { return new DefaultSessionState(); }
+            if (lastAccessedTime > getTimeoutTime()) { return new DefaultSessionState(maxInactiveInterval); }
             attributes.putAll(cell.getAttributes());
         } catch (RedisException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
@@ -47,7 +49,7 @@ public class JRedisSessionStateManager extends SessionStateManager {
             removeState(sessionId);
         }
 
-        return new DefaultSessionState(attributes, lastAccessedTime, false);
+        return new DefaultSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class JRedisSessionStateManager extends SessionStateManager {
             attributes.put(name, value);
         }
 
-        Cell cell = new Cell(attributes, sessionState.getCreationTime());
+        Cell cell = new Cell(attributes, sessionState.getCreationTime(), sessionState.getMaxInactiveInterval());
         try {
             getInitializer().getJRedis().set(key(sessionId), cell);
         } catch (RedisException e) {
@@ -107,8 +109,9 @@ public class JRedisSessionStateManager extends SessionStateManager {
 
         Map<String, Object> attributes;
         long lastAccessedTime;
+        int maxInactiveInterval;
 
-        public Cell(Map<String, Object> attributes, long lastAccessedTime) {
+        public Cell(Map<String, Object> attributes, long lastAccessedTime, int maxInactiveInterval) {
             this.attributes = attributes;
             this.lastAccessedTime = lastAccessedTime;
         }
@@ -119,6 +122,10 @@ public class JRedisSessionStateManager extends SessionStateManager {
 
         public long getLastAccessedTime() {
             return lastAccessedTime;
+        }
+
+        public int getMaxInactiveInterval() {
+            return maxInactiveInterval;
         }
     }
 }

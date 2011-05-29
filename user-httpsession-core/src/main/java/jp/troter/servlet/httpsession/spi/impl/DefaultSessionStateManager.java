@@ -24,7 +24,7 @@ public class DefaultSessionStateManager extends SessionStateManager {
     @Override
     public SessionState loadState(String sessionId) {
         log.error("DefaultSessionStateManager.loadState is stub.");
-        return new DefaultSessionState();
+        return new DefaultSessionState(0);
     }
 
     @Override
