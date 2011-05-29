@@ -1,6 +1,5 @@
 package jp.troter.servlet.httpsession;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -18,8 +17,6 @@ public class UserHttpSessionHttpServletRequestWrapper extends
 
     protected final HttpServletResponse response;
 
-    protected final ServletContext servletContext;
-
     protected final SessionStateManager sessionStateManager;
 
     protected final UserHttpSessionHolder sessionHolder;
@@ -33,11 +30,10 @@ public class UserHttpSessionHttpServletRequestWrapper extends
     protected String generatedSessionId;
 
     public UserHttpSessionHttpServletRequestWrapper(HttpServletRequest request,
-            HttpServletResponse response, ServletContext servletContext, SessionStateManager sessionStateManager) {
+            HttpServletResponse response, SessionStateManager sessionStateManager) {
         super(request);
         this.request = request;
         this.response = response;
-        this.servletContext = servletContext;
         this.sessionStateManager = sessionStateManager;
         sessionHolder = newUserHttpSessionHolder(this, sessionStateManager);
         setupSessionId(request);
@@ -73,7 +69,7 @@ public class UserHttpSessionHttpServletRequestWrapper extends
 
     @Override
     public HttpSession getSession(boolean create) {
-        HttpSession session = sessionHolder.getSession(create, servletContext);
+        HttpSession session = sessionHolder.getSession(create);
         if (session != null) {
             getSessionCookieHandler().writeCookie(request, response, session.getId());
         }

@@ -1,7 +1,5 @@
 package jp.troter.servlet.httpsession;
 
-import javax.servlet.ServletContext;
-
 import jp.troter.servlet.httpsession.spi.SessionIdGenerator;
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.spi.SessionValidator;
@@ -30,7 +28,7 @@ public class UserHttpSessionHolder {
         return session;
     }
 
-    public UserHttpSession getSession(boolean create, ServletContext servletContext) {
+    public UserHttpSession getSession(boolean create) {
         // session already exists.
         if (session != null) { return session; }
 
@@ -44,13 +42,13 @@ public class UserHttpSessionHolder {
             sessionId = getSessionIdGenerator().generateSessionId(request);
         }
 
-        session = createHttpSession(sessionId, needNewSession, servletContext);
+        session = createHttpSession(sessionId, needNewSession);
 
         return session;
     }
 
     protected UserHttpSession createHttpSession(final String sessionId,
-            final boolean needNewSession, ServletContext servletContext) {
+            final boolean needNewSession) {
         String currentSessionId = sessionId;
         boolean isNew = needNewSession;
         int retry = 0;
@@ -58,7 +56,7 @@ public class UserHttpSessionHolder {
             if (retry > retryLimit) {
                 throw new RuntimeException("cannot create session.");
             }
-            UserHttpSession session = newUserHttpSession(request, currentSessionId, sessionStateManager, servletContext);
+            UserHttpSession session = newUserHttpSession(request, currentSessionId, sessionStateManager);
 
             boolean isConflictSessionId = isNew && getSessionValidator().isExistsMarker(session);
             if (! isConflictSessionId) {
@@ -77,8 +75,8 @@ public class UserHttpSessionHolder {
     }
 
     protected UserHttpSession newUserHttpSession(UserHttpSessionHttpServletRequestWrapper request, String id,
-            SessionStateManager sessionStateManager, ServletContext servletContext) {
-        return new UserHttpSession(request, id, sessionStateManager, servletContext);
+            SessionStateManager sessionStateManager) {
+        return new UserHttpSession(request, id, sessionStateManager);
     }
 
     /**

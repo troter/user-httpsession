@@ -23,15 +23,12 @@ public class UserHttpSession implements HttpSession {
 
     protected SessionState sessionState;
 
-    protected ServletContext servletContext;
-
     protected int maxInactiveInterval = Integer.MAX_VALUE;
 
     public UserHttpSession(UserHttpSessionHttpServletRequestWrapper request, String id,
-            SessionStateManager sessionStateManager, ServletContext servletContext) {
+            SessionStateManager sessionStateManager) {
         this.request = request;
         this.id = id;
-        this.servletContext = servletContext;
         this.sessionStateManager = sessionStateManager;
     }
 
@@ -59,7 +56,7 @@ public class UserHttpSession implements HttpSession {
 
     @Override
     public ServletContext getServletContext() {
-        return servletContext;
+        return ServletContextHolder.getInstance().getServletContext();
     }
 
     @Override
