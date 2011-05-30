@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>jp.troter</groupId>
+    <groupId>jp.troter.user-httpsession</groupId>
     <artifactId>user-httpsession-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <packaging>pom</packaging>
 
-  <groupId>jp.troter</groupId>
+  <groupId>jp.troter.user-httpsession</groupId>
   <artifactId>user-httpsession-example-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
