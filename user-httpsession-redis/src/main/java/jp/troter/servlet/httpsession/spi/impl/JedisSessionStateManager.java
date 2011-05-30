@@ -6,24 +6,26 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.troter.servlet.httpsession.spi.JRedisInitializer;
+import jp.troter.servlet.httpsession.spi.JedisInitializer;
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
 
-import org.jredis.RedisException;
-import org.jredis.ri.alphazero.support.DefaultCodec;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JRedisSessionStateManager extends SessionStateManager {
+import redis.clients.jedis.Jedis;
 
-    private static Logger log = LoggerFactory.getLogger(JRedisSessionStateManager.class);
+public class JedisSessionStateManager extends SessionStateManager {
+
+    private static Logger log = LoggerFactory.getLogger(JedisSessionStateManager.class);
 
     private static final String KEY_PREFIX = "httpsession";
 
-    protected JRedisInitializer initializer;
+    protected JedisInitializer initializer;
 
     protected SessionValueSerializer serializer;
 
@@ -32,20 +34,24 @@ public class JRedisSessionStateManager extends SessionStateManager {
         Map<String, Object> attributes = new HashMap<String, Object>();
         long lastAccessedTime = new Date().getTime();
         int maxInactiveInterval = getDefaultTimeoutSecond();
+
+        Jedis jedis = getInitializer().getJedisPool().getResource();
         try {
-            byte[] cellData = getInitializer().getJRedis().get(key(sessionId));
-            if (cellData == null) { return new DefaultSessionState(maxInactiveInterval); }
-            Cell cell = (Cell)DefaultCodec.decode(cellData);
+            String hexCellData = jedis.get(key(sessionId));
+            if (hexCellData == null) { return newEmptySessionState(); }
+            Cell cell = (Cell)getSerializer().deserialize(Hex.decodeHex(hexCellData.toCharArray()));
             maxInactiveInterval = cell.getMaxInactiveInterval();
             lastAccessedTime = cell.getLastAccessedTime();
-            if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) { return new DefaultSessionState(getDefaultTimeoutSecond()); }
+            if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) { newEmptySessionState(); }
             attributes.putAll(cell.getAttributes());
-        } catch (RedisException e) {
-            log.warn("Redis exception occurred. session_id=" + sessionId, e);
-            removeState(sessionId);
         } catch (RuntimeException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
             removeState(sessionId);
+        } catch (DecoderException e) {
+            log.warn("Redis exception occurred. session_id=" + sessionId, e);
+            removeState(sessionId);
+        } finally {
+            getInitializer().getJedisPool().returnResource(jedis);
         }
 
         return new DefaultSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
@@ -62,21 +68,26 @@ public class JRedisSessionStateManager extends SessionStateManager {
         }
 
         Cell cell = new Cell(attributes, sessionState.getCreationTime(), sessionState.getMaxInactiveInterval());
+        Jedis jedis = getInitializer().getJedisPool().getResource();
         try {
-            getInitializer().getJRedis().set(key(sessionId), cell);
-        } catch (RedisException e) {
-            log.warn("Redis exception occurred. session_id=" + sessionId, e);
+            byte[] cellData = getSerializer().serialize(cell);
+            jedis.set(key(sessionId), Hex.encodeHexString(cellData));
         } catch (RuntimeException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
+        } finally {
+            getInitializer().getJedisPool().returnResource(jedis);
         }
     }
 
     @Override
     public void removeState(String sessionId) {
+        Jedis jedis = getInitializer().getJedisPool().getResource();
         try {
-            getInitializer().getJRedis().del(key(sessionId));
-        } catch (RedisException e) {
+            jedis.del(key(sessionId));
+        } catch (RuntimeException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
+        } finally {
+            getInitializer().getJedisPool().returnResource(jedis);
         }
     }
 
@@ -85,13 +96,18 @@ public class JRedisSessionStateManager extends SessionStateManager {
         return getInitializer().getDefaultTimeoutSecond();
     }
 
+    protected SessionState newEmptySessionState() {
+        return new DefaultSessionState(getDefaultTimeoutSecond());
+    }
+
+
     protected String key(String sessionId) {
         return KEY_PREFIX + "/" + sessionId;
     }
 
-    protected JRedisInitializer getInitializer() {
+    protected JedisInitializer getInitializer() {
         if (initializer == null) {
-            initializer = JRedisInitializer.newInstance();
+            initializer = JedisInitializer.newInstance();
         }
         return initializer;
     }

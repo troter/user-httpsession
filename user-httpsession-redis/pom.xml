@@ -24,11 +24,11 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!-- JRedis -->
+    <!--  Jedis -->
     <dependency>
-      <groupId>org.jredis</groupId>
-      <artifactId>jredis-core-all</artifactId>
-      <version>1.0-rc2</version>
+      <groupId>redis.clients</groupId>
+      <artifactId>jedis</artifactId>
+      <version>1.5.2</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
