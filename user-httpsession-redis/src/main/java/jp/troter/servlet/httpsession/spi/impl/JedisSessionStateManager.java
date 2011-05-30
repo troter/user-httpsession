@@ -44,12 +44,14 @@ public class JedisSessionStateManager extends SessionStateManager {
             lastAccessedTime = cell.getLastAccessedTime();
             if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) { newEmptySessionState(); }
             attributes.putAll(cell.getAttributes());
-        } catch (RuntimeException e) {
-            log.warn("Redis exception occurred. session_id=" + sessionId, e);
-            removeState(sessionId);
         } catch (DecoderException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
             removeState(sessionId);
+            getInitializer().getJedisPool().returnBrokenResource(jedis);
+        } catch (RuntimeException e) {
+            log.warn("Redis exception occurred. session_id=" + sessionId, e);
+            removeState(sessionId);
+            getInitializer().getJedisPool().returnBrokenResource(jedis);
         } finally {
             getInitializer().getJedisPool().returnResource(jedis);
         }
@@ -74,6 +76,7 @@ public class JedisSessionStateManager extends SessionStateManager {
             jedis.set(key(sessionId), Hex.encodeHexString(cellData));
         } catch (RuntimeException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
+            getInitializer().getJedisPool().returnBrokenResource(jedis);
         } finally {
             getInitializer().getJedisPool().returnResource(jedis);
         }
@@ -86,6 +89,7 @@ public class JedisSessionStateManager extends SessionStateManager {
             jedis.del(key(sessionId));
         } catch (RuntimeException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
+            getInitializer().getJedisPool().returnBrokenResource(jedis);
         } finally {
             getInitializer().getJedisPool().returnResource(jedis);
         }
