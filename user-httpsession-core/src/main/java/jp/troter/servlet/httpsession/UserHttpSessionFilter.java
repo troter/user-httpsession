@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -13,13 +14,29 @@ import javax.servlet.http.HttpServletResponse;
 
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
 
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class UserHttpSessionFilter implements Filter {
+
+    private static Logger log = LoggerFactory.getLogger(UserHttpSessionFilter.class);
+
+    protected int retryLimit;
+    public static final int DEFAULT_RETRY_LIMIT = 10;
 
     protected SessionStateManager sessionStateManager;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
+        ServletContext context = filterConfig.getServletContext();
+        if (context == null) {
+            log.error("unable to init as servlet context is null");
+            return;
+        }
         ServletContextHolder.setInstance(new ServletContextHolder(filterConfig.getServletContext()));
+
+        retryLimit = initParameterToInt(filterConfig, "retryLimit", DEFAULT_RETRY_LIMIT);
     }
 
     @Override
@@ -30,7 +47,7 @@ public class UserHttpSessionFilter implements Filter {
             FilterChain chain) throws IOException, ServletException {
         SessionStateManager ssm = getSessionStateManager();
         UserHttpSessionHttpServletRequestWrapper requestWrapper = newUserHttpSessionHttpServletRequestWrapper(
-                (HttpServletRequest) request, (HttpServletResponse) response, ssm);
+                (HttpServletRequest) request, (HttpServletResponse) response, ssm, retryLimit);
         UserHttpSessionHttpServletResponseWrapper responseWrapper = newUserHttpSessionHttpServletResponseWrapper(
                 (HttpServletResponse) response, requestWrapper, ssm);
 
@@ -43,9 +60,9 @@ public class UserHttpSessionFilter implements Filter {
 
     protected UserHttpSessionHttpServletRequestWrapper newUserHttpSessionHttpServletRequestWrapper(
             HttpServletRequest request, HttpServletResponse response,
-            SessionStateManager sessionStateManager
+            SessionStateManager sessionStateManager, final int retryLimit
     ) {
-        return new UserHttpSessionHttpServletRequestWrapper(request, response, sessionStateManager);
+        return new UserHttpSessionHttpServletRequestWrapper(request, response, sessionStateManager, retryLimit);
     }
 
     protected UserHttpSessionHttpServletResponseWrapper newUserHttpSessionHttpServletResponseWrapper(
@@ -60,5 +77,18 @@ public class UserHttpSessionFilter implements Filter {
             sessionStateManager = SessionStateManager.getInstance();
         }
         return sessionStateManager;
+    }
+
+    protected int initParameterToInt(FilterConfig filterConfig, String parameterName, int defaultValue) {
+        int value = defaultValue;
+        String parameterStr = filterConfig.getInitParameter(parameterName);
+        try {
+            if (! StringUtils.isEmpty(parameterStr)) {
+                value = Integer.parseInt(parameterStr);
+            }
+        } catch (NumberFormatException e) {
+            log.debug(parameterName + " is not a number. use default value.", e);
+        }
+        return value;
     }
 }

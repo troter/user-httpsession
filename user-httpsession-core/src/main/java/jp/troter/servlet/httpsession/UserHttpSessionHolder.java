@@ -17,11 +17,12 @@ public class UserHttpSessionHolder {
 
     protected SessionIdGenerator sessionIdGenerator;
 
-    protected int retryLimit = 10;
+    protected final int retryLimit;
 
-    public UserHttpSessionHolder(UserHttpSessionHttpServletRequestWrapper request, SessionStateManager sessionStateManager) {
+    public UserHttpSessionHolder(UserHttpSessionHttpServletRequestWrapper request, SessionStateManager sessionStateManager, final int retryLimit) {
         this.request = request;
         this.sessionStateManager = sessionStateManager;
+        this.retryLimit = retryLimit;
     }
 
     public UserHttpSession getUserHttpSession() {

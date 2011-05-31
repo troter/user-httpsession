@@ -30,12 +30,13 @@ public class UserHttpSessionHttpServletRequestWrapper extends
     protected String generatedSessionId;
 
     public UserHttpSessionHttpServletRequestWrapper(HttpServletRequest request,
-            HttpServletResponse response, SessionStateManager sessionStateManager) {
+            HttpServletResponse response, SessionStateManager sessionStateManager,
+            final int retryLimit) {
         super(request);
         this.request = request;
         this.response = response;
         this.sessionStateManager = sessionStateManager;
-        sessionHolder = newUserHttpSessionHolder(this, sessionStateManager);
+        sessionHolder = newUserHttpSessionHolder(this, sessionStateManager, retryLimit);
         setupSessionId(request);
     }
 
@@ -99,9 +100,10 @@ public class UserHttpSessionHttpServletRequestWrapper extends
     }
 
     protected UserHttpSessionHolder newUserHttpSessionHolder(
-            UserHttpSessionHttpServletRequestWrapper request, SessionStateManager sessionStateManager
+            UserHttpSessionHttpServletRequestWrapper request, SessionStateManager sessionStateManager,
+            final int retryLimit
     ) {
-        return new UserHttpSessionHolder(request, sessionStateManager);
+        return new UserHttpSessionHolder(request, sessionStateManager, retryLimit);
     }
 
     protected SessionCookieHandler getSessionCookieHandler() {
