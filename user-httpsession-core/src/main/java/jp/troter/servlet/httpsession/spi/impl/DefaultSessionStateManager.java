@@ -29,7 +29,7 @@ public class DefaultSessionStateManager extends SessionStateManager {
 
     @Override
     public int getDefaultTimeoutSecond() {
-        log.error("DefaultSessionStateManager.getTimeoutSecond is stub.");
+        log.error("DefaultSessionStateManager.getDefaultTimeoutSecond is stub.");
         return 0;
     }
 }
