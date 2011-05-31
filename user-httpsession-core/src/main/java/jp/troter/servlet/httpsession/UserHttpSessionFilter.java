@@ -19,7 +19,7 @@ public class UserHttpSessionFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        ServletContextHolder.getInstance().setServletContext(filterConfig.getServletContext());
+        ServletContextHolder.setInstance(new ServletContextHolder(filterConfig.getServletContext()));
     }
 
     @Override
