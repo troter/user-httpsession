@@ -28,6 +28,7 @@ public class UserHttpSessionHttpServletResponseWrapper extends
         this.sessionStateManager = sessionStateManager;
     }
 
+    @Deprecated
     @Override
     public String encodeRedirectUrl(String url) {
         return encodeRedirectURL(url);
@@ -38,6 +39,7 @@ public class UserHttpSessionHttpServletResponseWrapper extends
         return getSessionCookieHandler().rewriteURL(url, requestWrapper);
     }
 
+    @Deprecated
     @Override
     public String encodeUrl(String url) {
         return super.encodeURL(url);
