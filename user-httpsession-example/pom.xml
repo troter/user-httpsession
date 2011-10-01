@@ -23,6 +23,28 @@
     <module>user-httpsession-example-redis</module>
   </modules>
 
+  <dependencyManagement>
+    <dependencies>
+      <!-- Jersey-->
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-server</artifactId>
+        <version>1.9.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.grizzly</groupId>
+        <artifactId>grizzly-servlet-webserver</artifactId>
+        <version>1.9.18-i</version>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.jersey.jersey-test-framework</groupId>
+        <artifactId>jersey-test-framework-grizzly2</artifactId>
+        <version>1.9.1</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <build>
     <plugins>
       <!-- maven-dependency-plugin -->
