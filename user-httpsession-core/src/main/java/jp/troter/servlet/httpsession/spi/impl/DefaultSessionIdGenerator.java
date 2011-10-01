@@ -2,8 +2,8 @@ package jp.troter.servlet.httpsession.spi.impl;
 
 import java.util.UUID;
 
-import jp.troter.servlet.httpsession.UserHttpSessionHttpServletRequestWrapper;
 import jp.troter.servlet.httpsession.spi.SessionIdGenerator;
+import jp.troter.servlet.httpsession.wrapper.UserHttpSessionHttpServletRequestWrapper;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package jp.troter.servlet.httpsession;
+package jp.troter.servlet.httpsession.wrapper;
 
 import jp.troter.servlet.httpsession.spi.SessionIdGenerator;
 import jp.troter.servlet.httpsession.spi.SessionStateManager;

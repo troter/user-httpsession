@@ -1,8 +1,8 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
-import jp.troter.servlet.httpsession.UserHttpSession;
-import jp.troter.servlet.httpsession.UserHttpSessionHttpServletRequestWrapper;
 import jp.troter.servlet.httpsession.spi.SessionValidator;
+import jp.troter.servlet.httpsession.wrapper.UserHttpSession;
+import jp.troter.servlet.httpsession.wrapper.UserHttpSessionHttpServletRequestWrapper;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;

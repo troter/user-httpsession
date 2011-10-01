@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
+import jp.troter.servlet.httpsession.wrapper.UserHttpSessionHttpServletRequestWrapper;
+import jp.troter.servlet.httpsession.wrapper.UserHttpSessionHttpServletResponseWrapper;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

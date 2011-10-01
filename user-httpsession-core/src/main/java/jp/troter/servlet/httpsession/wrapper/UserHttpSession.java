@@ -1,4 +1,4 @@
-package jp.troter.servlet.httpsession;
+package jp.troter.servlet.httpsession.wrapper;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -8,6 +8,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
+import jp.troter.servlet.httpsession.ServletContextHolder;
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.state.SessionState;
 

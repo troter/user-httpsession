@@ -1,6 +1,6 @@
 package jp.troter.servlet.httpsession.spi;
 
-import jp.troter.servlet.httpsession.UserHttpSessionHttpServletRequestWrapper;
+import jp.troter.servlet.httpsession.wrapper.UserHttpSessionHttpServletRequestWrapper;
 
 public abstract class SessionIdGenerator {
 

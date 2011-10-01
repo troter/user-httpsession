@@ -1,4 +1,4 @@
-package jp.troter.servlet.httpsession;
+package jp.troter.servlet.httpsession.wrapper;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;

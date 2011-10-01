@@ -1,7 +1,7 @@
 package jp.troter.servlet.httpsession.spi;
 
-import jp.troter.servlet.httpsession.UserHttpSession;
-import jp.troter.servlet.httpsession.UserHttpSessionHttpServletRequestWrapper;
+import jp.troter.servlet.httpsession.wrapper.UserHttpSession;
+import jp.troter.servlet.httpsession.wrapper.UserHttpSessionHttpServletRequestWrapper;
 
 public abstract class SessionValidator {
 
