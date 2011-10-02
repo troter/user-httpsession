@@ -17,12 +17,9 @@ public class UserHttpSessionHolder {
 
     protected SessionIdGenerator sessionIdGenerator;
 
-    protected final int retryLimit;
-
-    public UserHttpSessionHolder(UserHttpSessionHttpServletRequestWrapper request, SessionStateManager sessionStateManager, final int retryLimit) {
+    public UserHttpSessionHolder(UserHttpSessionHttpServletRequestWrapper request, SessionStateManager sessionStateManager) {
         this.request = request;
         this.sessionStateManager = sessionStateManager;
-        this.retryLimit = retryLimit;
     }
 
     public UserHttpSession getUserHttpSession() {
@@ -53,7 +50,7 @@ public class UserHttpSessionHolder {
         boolean isNew = needNewSession;
         int retry = 0;
         while (true) {
-            if (retry > retryLimit) {
+            if (retry > getSessionIdGenerator().getRetryLimit()) {
                 throw new RuntimeException("cannot create session.");
             }
             UserHttpSession session = newUserHttpSession(request, currentSessionId, sessionStateManager);

@@ -23,6 +23,12 @@ public abstract class SessionIdGenerator {
     }
 
     /**
+     * retry limit of session id generation
+     * @return
+     */
+    public abstract int getRetryLimit();
+
+    /**
      * generate session id
      * @param request
      * @return

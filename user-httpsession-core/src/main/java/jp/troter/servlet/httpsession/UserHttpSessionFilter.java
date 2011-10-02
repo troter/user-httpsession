@@ -24,9 +24,6 @@ public class UserHttpSessionFilter implements Filter {
 
     private static Logger log = LoggerFactory.getLogger(UserHttpSessionFilter.class);
 
-    protected int retryLimit;
-    public static final int DEFAULT_RETRY_LIMIT = 10;
-
     protected SessionStateManager sessionStateManager;
 
     @Override
@@ -37,8 +34,6 @@ public class UserHttpSessionFilter implements Filter {
             return;
         }
         ServletContextHolder.setInstance(new ServletContextHolder(filterConfig.getServletContext()));
-
-        retryLimit = initParameterToInt(filterConfig, "retryLimit", DEFAULT_RETRY_LIMIT);
     }
 
     @Override
@@ -49,7 +44,7 @@ public class UserHttpSessionFilter implements Filter {
             FilterChain chain) throws IOException, ServletException {
         SessionStateManager ssm = getSessionStateManager();
         UserHttpSessionHttpServletRequestWrapper requestWrapper = newUserHttpSessionHttpServletRequestWrapper(
-                (HttpServletRequest) request, (HttpServletResponse) response, ssm, retryLimit);
+                (HttpServletRequest) request, (HttpServletResponse) response, ssm);
         UserHttpSessionHttpServletResponseWrapper responseWrapper = newUserHttpSessionHttpServletResponseWrapper(
                 (HttpServletResponse) response, requestWrapper, ssm);
 
@@ -62,9 +57,9 @@ public class UserHttpSessionFilter implements Filter {
 
     protected UserHttpSessionHttpServletRequestWrapper newUserHttpSessionHttpServletRequestWrapper(
             HttpServletRequest request, HttpServletResponse response,
-            SessionStateManager sessionStateManager, final int retryLimit
+            SessionStateManager sessionStateManager
     ) {
-        return new UserHttpSessionHttpServletRequestWrapper(request, response, sessionStateManager, retryLimit);
+        return new UserHttpSessionHttpServletRequestWrapper(request, response, sessionStateManager);
     }
 
     protected UserHttpSessionHttpServletResponseWrapper newUserHttpSessionHttpServletResponseWrapper(

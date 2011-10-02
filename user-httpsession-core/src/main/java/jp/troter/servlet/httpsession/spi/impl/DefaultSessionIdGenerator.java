@@ -14,6 +14,11 @@ public class DefaultSessionIdGenerator extends SessionIdGenerator{
     private static Logger log = LoggerFactory.getLogger(DefaultSessionIdGenerator.class);
 
     @Override
+    public int getRetryLimit() {
+        return 10;
+    }
+
+    @Override
     public String generateSessionId(UserHttpSessionHttpServletRequestWrapper request) {
         return generateSessionId(request, -1);
     }
