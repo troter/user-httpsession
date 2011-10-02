@@ -22,6 +22,10 @@
       <param-name>javax.ws.rs.Application</param-name>
       <param-value>jp.troter.servlet.httpsession.example.redis.RedisExampleApplication</param-value>
     </init-param>
+    <init-param>
+      <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+      <param-value>true</param-value>
+    </init-param>
   </servlet>
 
   <servlet-mapping>

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-import jp.troter.servlet.httpsession.example.memcached.resorces.RootResource;
+import jp.troter.servlet.httpsession.example.memcached.resources.RootResource;
 
 public class MemcachedExampleApplication extends Application {
 

@@ -133,6 +133,7 @@ public class JedisSessionStateManager extends SessionStateManager {
         public Cell(Map<String, Object> attributes, long lastAccessedTime, int maxInactiveInterval) {
             this.attributes = attributes;
             this.lastAccessedTime = lastAccessedTime;
+            this.maxInactiveInterval = maxInactiveInterval;
         }
 
         public Map<String, Object> getAttributes() {

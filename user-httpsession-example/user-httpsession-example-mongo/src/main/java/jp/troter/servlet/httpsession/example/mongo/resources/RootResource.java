@@ -1,5 +1,8 @@
 package jp.troter.servlet.httpsession.example.mongo.resources;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -7,25 +10,28 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/")
 public class RootResource {
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String root(@Context HttpServletRequest req) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response root(@Context HttpServletRequest req) {
         HttpSession session = req.getSession();
-        StringBuilder c = new StringBuilder();
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("sessionid", session.getId());
         if (session.getAttribute("count") == null) {
             session.setAttribute("count", Integer.valueOf(0));
         } else {
-            c.append("before " + session.getAttribute("count")).append("\n");
+            result.put("before", session.getAttribute("count"));
             session.setAttribute("count", Integer.valueOf((Integer)session.getAttribute("count")).intValue() + 1);
         }
-        c.append("after  " + session.getAttribute("count")).append("\n");
-        c.append("creationTime     " + session.getCreationTime()).append("\n");
-        c.append("creationTime     " + session.getCreationTime()).append("\n");
-        return c.toString();
+        result.put("after", session.getAttribute("count"));
+        result.put("creationTime", session.getCreationTime());
+        result.put("lastAccessedTime", session.getLastAccessedTime());
+        result.put("maxInactiveInterval", session.getMaxInactiveInterval());
+        return Response.ok(result).build();
     }
 
     @Path("invalid")
