@@ -50,6 +50,11 @@ public class DefaultSessionState implements SessionState {
     }
 
     @Override
+    public void removeAttribute(String name) {
+        attributes.remove(name);
+    }
+
+    @Override
     public Object getAttribute(String name) {
         return attributes.get(name);
     }
