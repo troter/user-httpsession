@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jp.troter.servlet.httpsession.spi.SpyMemcachedInitializer;
-import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
 
 import org.slf4j.Logger;
@@ -62,18 +61,13 @@ public class SpyMemcachedSessionStateManager extends DefaultSessionStateManager 
         }
     }
 
-    @Override
-    protected SessionState newEmptySessionState() {
-        return new DefaultSessionState(getDefaultTimeoutSecond());
-    }
-
     protected SessionState restoredSessionState(Cell cell) {
         int maxInactiveInterval = cell.getMaxInactiveInterval();
         long lastAccessedTime = cell.getLastAccessedTime();
         if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) {
             return newEmptySessionState();
         }
-        return new DefaultSessionState(cell.getAttributes(), lastAccessedTime, false, maxInactiveInterval);
+        return newSessionState(cell.getAttributes(), lastAccessedTime, false, maxInactiveInterval);
     }
 
     protected Cell storedSessionState(SessionState sessionState) {

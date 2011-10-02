@@ -7,7 +7,6 @@ import java.util.Map;
 
 import jp.troter.servlet.httpsession.spi.MongoDBInitializer;
 import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
-import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
 
 import org.apache.commons.lang.StringUtils;
@@ -85,11 +84,6 @@ public class MongoSessionStateManager extends DefaultSessionStateManager {
         }
     }
 
-    @Override
-    protected SessionState newEmptySessionState() {
-        return new DefaultSessionState(getDefaultTimeoutSecond());
-    }
-
     protected SessionState restoredSessionState(DBObject obj) {
         int maxInactiveInterval = ((Integer)obj.get(getMaxInactiveIntervalKey())).intValue();
         long lastAccessedTime = ((Long)obj.get(getLastAccessedTimeKey())).longValue();
@@ -106,7 +100,7 @@ public class MongoSessionStateManager extends DefaultSessionStateManager {
                 log.warn("undeserialize object name: " + name, e);
             }
         }
-        return new DefaultSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
+        return newSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
     }
 
     protected DBObject storedSessionState(SessionState sessionState) {

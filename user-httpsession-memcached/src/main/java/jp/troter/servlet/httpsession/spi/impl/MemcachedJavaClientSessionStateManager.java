@@ -63,11 +63,6 @@ public class MemcachedJavaClientSessionStateManager extends DefaultSessionStateM
         }
     }
 
-    @Override
-    protected SessionState newEmptySessionState() {
-        return new DefaultSessionState(getDefaultTimeoutSecond());
-    }
-
     protected SessionState restoredSessionState(Cell cell) {
         int maxInactiveInterval = cell.getMaxInactiveInterval();
         long lastAccessedTime = cell.getLastAccessedTime();

@@ -7,7 +7,6 @@ import java.util.Map;
 
 import jp.troter.servlet.httpsession.spi.JedisInitializer;
 import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
-import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
 
 import org.apache.commons.codec.DecoderException;
@@ -60,7 +59,7 @@ public class JedisSessionStateManager extends DefaultSessionStateManager {
             getInitializer().getJedisPool().returnResource(jedis);
         }
 
-        return new DefaultSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
+        return newSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
     }
 
     @Override
@@ -104,12 +103,6 @@ public class JedisSessionStateManager extends DefaultSessionStateManager {
             getInitializer().getJedisPool().returnResource(jedis);
         }
     }
-
-    @Override
-    protected SessionState newEmptySessionState() {
-        return new DefaultSessionState(getDefaultTimeoutSecond());
-    }
-
 
     protected String key(String sessionId) {
         return KEY_PREFIX + "/" + sessionId;

@@ -39,7 +39,7 @@ public class DefaultSessionStateManager extends SessionStateManager {
             }
         }
 
-        return new DefaultSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
+        return newSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);
     }
 
     @Override
@@ -63,5 +63,9 @@ public class DefaultSessionStateManager extends SessionStateManager {
 
     protected SessionState newEmptySessionState() {
         return new DefaultSessionState(getDefaultTimeoutSecond());
+    }
+
+    protected SessionState newSessionState(Map<String, Object> attributes, long lastAccessedTime, boolean isNew, int maxInactiveInterval) {
+        return new DefaultSessionState(attributes, lastAccessedTime, isNew, maxInactiveInterval);
     }
 }
