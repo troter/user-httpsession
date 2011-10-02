@@ -28,6 +28,7 @@ public class RootResource {
             session.setAttribute("count", Integer.valueOf((Integer)session.getAttribute("count")).intValue() + 1);
         }
         result.put("after", session.getAttribute("count"));
+        result.put("isNew", session.isNew());
         result.put("creationTime", session.getCreationTime());
         result.put("lastAccessedTime", session.getLastAccessedTime());
         result.put("maxInactiveInterval", session.getMaxInactiveInterval());
