@@ -41,7 +41,7 @@ public class MemcachedJavaClientSessionStateManager extends
     public void saveState(String sessionId, SessionState sessionState) {
         Cell cell = storedSessionState(sessionState);
         try {
-            getInitializer().getMemCachedClient().set(key(sessionId), cell, new Date(System.currentTimeMillis() + cell.getMaxInactiveInterval()));
+            getInitializer().getMemCachedClient().set(key(sessionId), cell, new Date(getTimeoutTime(cell.getMaxInactiveInterval())));
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at set method. session_id=" + sessionId, e);
         }
@@ -106,6 +106,7 @@ public class MemcachedJavaClientSessionStateManager extends
         public Cell(Map<String, Object> attributes, long lastAccessedTime, int maxInactiveInterval) {
             this.attributes = attributes;
             this.lastAccessedTime = lastAccessedTime;
+            this.maxInactiveInterval = maxInactiveInterval;
         }
 
         public Map<String, Object> getAttributes() {
