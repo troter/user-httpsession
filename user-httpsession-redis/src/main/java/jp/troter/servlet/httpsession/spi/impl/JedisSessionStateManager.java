@@ -35,11 +35,15 @@ public class JedisSessionStateManager extends DefaultSessionStateManager {
         Jedis jedis = getInitializer().getJedisPool().getResource();
         try {
             String hexCellData = jedis.get(key(sessionId));
-            if (hexCellData == null) { return newEmptySessionState(); }
+            if (hexCellData == null) {
+                return newEmptySessionState();
+            }
             Cell cell = (Cell)getSerializer().deserialize(Hex.decodeHex(hexCellData.toCharArray()));
             maxInactiveInterval = cell.getMaxInactiveInterval();
             lastAccessedTime = cell.getLastAccessedTime();
-            if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) { newEmptySessionState(); }
+            if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) {
+                return newEmptySessionState();
+            }
             attributes.putAll(cell.getAttributes());
         } catch (DecoderException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);

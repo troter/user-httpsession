@@ -27,9 +27,14 @@ public class DefaultSessionStateManager extends SessionStateManager {
 
         try {
             Cell cell = sessionStore.get(sessionId);
+            if (cell == null) {
+                return newEmptySessionState();
+            }
             maxInactiveInterval = cell.getMaxInactiveInterval();
             lastAccessedTime = cell.getLastAccessedTime();
-            if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) { newEmptySessionState(); }
+            if (lastAccessedTime > getTimeoutTime(maxInactiveInterval)) {
+                return newEmptySessionState();
+            }
             attributes.putAll(cell.getAttributes());
         } catch (RuntimeException e) {
             log.warn("RuntimeException occurred. session_id=" + sessionId, e);
