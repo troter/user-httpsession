@@ -33,6 +33,15 @@ public class DefaultSessionStateManager extends SessionStateManager {
     }
 
     @Override
+    public boolean isThrowException() {
+        String throwException = System.getProperty(PROPERTY_KEY_SESSION_STATE_THROW_EXCEPTION);
+        if (throwException != null) {
+            return Boolean.valueOf(throwException).booleanValue();
+        }
+        return false;
+    }
+
+    @Override
     public SessionState loadState(String sessionId) {
         Map<String, Object> attributes = new HashMap<String, Object>();
         long lastAccessedTime = new Date().getTime();
@@ -47,6 +56,9 @@ public class DefaultSessionStateManager extends SessionStateManager {
         } catch (RuntimeException e) {
             log.warn("RuntimeException occurred. session_id=" + sessionId, e);
             removeState(sessionId);
+            if (isThrowException()) {
+                throw e;
+            }
         }
 
         return new DefaultSessionState(attributes, lastAccessedTime, false, maxInactiveInterval);

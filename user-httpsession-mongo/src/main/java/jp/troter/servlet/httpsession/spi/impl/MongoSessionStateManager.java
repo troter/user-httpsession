@@ -45,6 +45,9 @@ public class MongoSessionStateManager extends DefaultSessionStateManager {
         } catch (RuntimeException e) {
             log.warn("MongoDB exception occurred at find method. session_id=" + sessionId, e);
             removeState(sessionId);
+            if (isThrowException()) {
+                throw e;
+            }
         }
 
         return newEmptySessionState();
@@ -59,6 +62,9 @@ public class MongoSessionStateManager extends DefaultSessionStateManager {
             getSessionCollection().save(session);
         } catch (RuntimeException e) {
             log.warn("MongoDB exception occurred at insert method. session_id=" + sessionId, e);
+            if (isThrowException()) {
+                throw e;
+            }
         }
     }
 
@@ -73,6 +79,9 @@ public class MongoSessionStateManager extends DefaultSessionStateManager {
             }
         } catch (RuntimeException e) {
             log.warn("MongoDB exception occurred at insert method. session_id=" + sessionId, e);
+            if (isThrowException()) {
+                throw e;
+            }
         }
     }
 

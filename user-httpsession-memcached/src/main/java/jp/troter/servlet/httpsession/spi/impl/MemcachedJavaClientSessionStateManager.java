@@ -30,6 +30,9 @@ public class MemcachedJavaClientSessionStateManager extends DefaultSessionStateM
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at get method. session_id=" + sessionId, e);
             removeState(sessionId);
+            if (isThrowException()) {
+                throw e;
+            }
         }
 
         return newEmptySessionState();
@@ -42,6 +45,9 @@ public class MemcachedJavaClientSessionStateManager extends DefaultSessionStateM
             getInitializer().getMemCachedClient().set(key(sessionId), cell, new Date(getTimeoutTime(cell.getMaxInactiveInterval())));
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at set method. session_id=" + sessionId, e);
+            if (isThrowException()) {
+                throw e;
+            }
         }
     }
 
@@ -51,6 +57,9 @@ public class MemcachedJavaClientSessionStateManager extends DefaultSessionStateM
             getInitializer().getMemCachedClient().delete(key(sessionId));
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at delete method. session_id=" + sessionId, e);
+            if (isThrowException()) {
+                throw e;
+            }
         }
     }
 

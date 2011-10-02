@@ -29,6 +29,9 @@ public class SpyMemcachedSessionStateManager extends DefaultSessionStateManager 
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at get method. session_id=" + sessionId, e);
             removeState(sessionId);
+            if (isThrowException()) {
+                throw e;
+            }
         }
 
         return newEmptySessionState();
@@ -41,6 +44,9 @@ public class SpyMemcachedSessionStateManager extends DefaultSessionStateManager 
             getInitializer().getMemcachedClient().set(key(sessionId), cell.getMaxInactiveInterval(), cell);
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at set method. session_id=" + sessionId, e);
+            if (isThrowException()) {
+                throw e;
+            }
         }
     }
 
@@ -50,6 +56,9 @@ public class SpyMemcachedSessionStateManager extends DefaultSessionStateManager 
             getInitializer().getMemcachedClient().delete(key(sessionId));
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at delete method. session_id=" + sessionId, e);
+            if (isThrowException()) {
+                throw e;
+            }
         }
     }
 

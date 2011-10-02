@@ -18,6 +18,9 @@ public abstract class SessionStateManager {
     public static final String PROPERTY_KEY_SESSION_STATE_DEFAULT_TIMEOUT_SECOND
         = "jp.troter.servlet.httpsession.spi.SessionStateManager.defaultTimeoutSecond";
 
+    public static final String PROPERTY_KEY_SESSION_STATE_THROW_EXCEPTION
+        = "jp.troter.servlet.httpsession.spi.SessionStateManager.throwException";
+
     private static SingleServiceLoader<SessionStateManager> loader;
 
     private static SessionStateManager sessionStateManager;
@@ -41,6 +44,12 @@ public abstract class SessionStateManager {
      * @return session timeout second.
      */
     public abstract int getDefaultTimeoutSecond();
+
+    /**
+     * SessionStateManager throw exception.
+     * @return
+     */
+    public abstract boolean isThrowException();
 
     /**
      * load {@link SessionState} from miscellaneous storage.

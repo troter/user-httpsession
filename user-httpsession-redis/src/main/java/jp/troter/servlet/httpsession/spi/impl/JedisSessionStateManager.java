@@ -46,10 +46,16 @@ public class JedisSessionStateManager extends DefaultSessionStateManager {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
             removeState(sessionId);
             getInitializer().getJedisPool().returnBrokenResource(jedis);
+            if (isThrowException()) {
+                throw new RuntimeException(e);
+            }
         } catch (RuntimeException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
             removeState(sessionId);
             getInitializer().getJedisPool().returnBrokenResource(jedis);
+            if (isThrowException()) {
+                throw e;
+            }
         } finally {
             getInitializer().getJedisPool().returnResource(jedis);
         }
@@ -75,6 +81,9 @@ public class JedisSessionStateManager extends DefaultSessionStateManager {
         } catch (RuntimeException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
             getInitializer().getJedisPool().returnBrokenResource(jedis);
+            if (isThrowException()) {
+                throw e;
+            }
         } finally {
             getInitializer().getJedisPool().returnResource(jedis);
         }
@@ -88,6 +97,9 @@ public class JedisSessionStateManager extends DefaultSessionStateManager {
         } catch (RuntimeException e) {
             log.warn("Redis exception occurred. session_id=" + sessionId, e);
             getInitializer().getJedisPool().returnBrokenResource(jedis);
+            if (isThrowException()) {
+                throw e;
+            }
         } finally {
             getInitializer().getJedisPool().returnResource(jedis);
         }
