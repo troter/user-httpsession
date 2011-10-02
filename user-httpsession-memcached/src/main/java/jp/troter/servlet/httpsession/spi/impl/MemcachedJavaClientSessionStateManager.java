@@ -1,6 +1,5 @@
 package jp.troter.servlet.httpsession.spi.impl;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -61,6 +60,7 @@ public class MemcachedJavaClientSessionStateManager extends
         return getInitializer().getDefaultTimeoutSecond();
     }
 
+    @Override
     protected SessionState newEmptySessionState() {
         return new DefaultSessionState(getDefaultTimeoutSecond());
     }
@@ -95,31 +95,4 @@ public class MemcachedJavaClientSessionStateManager extends
         }
         return initializer;
     }
-
-    protected static class Cell implements Serializable {
-        private static final long serialVersionUID = 1L;
-
-        Map<String, Object> attributes;
-        long lastAccessedTime;
-        int maxInactiveInterval;
-
-        public Cell(Map<String, Object> attributes, long lastAccessedTime, int maxInactiveInterval) {
-            this.attributes = attributes;
-            this.lastAccessedTime = lastAccessedTime;
-            this.maxInactiveInterval = maxInactiveInterval;
-        }
-
-        public Map<String, Object> getAttributes() {
-            return attributes;
-        }
-
-        public long getLastAccessedTime() {
-            return lastAccessedTime;
-        }
-
-        public int getMaxInactiveInterval() {
-            return maxInactiveInterval;
-        }
-    }
-
 }

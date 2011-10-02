@@ -1,6 +1,8 @@
 package jp.troter.servlet.httpsession.spi;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import jp.troter.servlet.httpsession.state.SessionState;
@@ -72,5 +74,31 @@ public abstract class SessionStateManager {
      */
     public long getTimeoutTime(int maxInactiveInterval) {
         return new Date().getTime() + TimeUnit.SECONDS.toMillis(maxInactiveInterval);
+    }
+
+    public static class Cell implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        Map<String, Object> attributes;
+        long lastAccessedTime;
+        int maxInactiveInterval;
+
+        public Cell(Map<String, Object> attributes, long lastAccessedTime, int maxInactiveInterval) {
+            this.attributes = attributes;
+            this.lastAccessedTime = lastAccessedTime;
+            this.maxInactiveInterval = maxInactiveInterval;
+        }
+
+        public Map<String, Object> getAttributes() {
+            return attributes;
+        }
+
+        public long getLastAccessedTime() {
+            return lastAccessedTime;
+        }
+
+        public int getMaxInactiveInterval() {
+            return maxInactiveInterval;
+        }
     }
 }
