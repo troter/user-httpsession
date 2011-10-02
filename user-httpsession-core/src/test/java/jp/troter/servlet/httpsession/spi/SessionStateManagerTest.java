@@ -23,4 +23,13 @@ public class SessionStateManagerTest {
         assertThat(instance.getDefaultTimeoutSecond(), is(20));
     }
 
+    @Test
+    public void cookieSecure() {
+        SessionStateManager instance = SessionStateManager.getInstance();
+        assertThat(instance.isThrowException(), is(false));
+        System.setProperty(SessionStateManager.PROPERTY_KEY_SESSION_STATE_THROW_EXCEPTION, "true");
+        assertThat(instance.isThrowException(), is(true));
+        System.setProperty(SessionStateManager.PROPERTY_KEY_SESSION_STATE_THROW_EXCEPTION, "false");
+        assertThat(instance.isThrowException(), is(false));
+    }
 }
