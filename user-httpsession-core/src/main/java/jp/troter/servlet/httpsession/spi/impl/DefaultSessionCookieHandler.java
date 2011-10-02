@@ -11,44 +11,6 @@ import org.apache.commons.lang.StringUtils;
 
 public class DefaultSessionCookieHandler extends SessionCookieHandler {
 
-    private static final String SESSION_COOKIE_NAME = "SESSIONID";
-
-    @Override
-    public String getSessionCookieName() {
-        String sessionCookieName = System.getProperty(PROPERTY_KEY_SESSION_COOKIE_NAME);
-        if (sessionCookieName != null) {
-            return sessionCookieName;
-        }
-        return SESSION_COOKIE_NAME;
-    }
-
-    @Override
-    public String getSessionCookieDomain() {
-        String sessionCookieDomain = System.getProperty(PROPERTY_KEY_SESSION_COOKIE_DOMAIN);
-        if (sessionCookieDomain != null) {
-            return sessionCookieDomain;
-        }
-        return null;
-    }
-
-    @Override
-    public String getSessionCookiePath() {
-        String sessionCookiePath = System.getProperty(PROPERTY_KEY_SESSION_COOKIE_PATH);
-        if (sessionCookiePath != null) {
-            return sessionCookiePath;
-        }
-        return null;
-    }
-
-    @Override
-    public boolean isSecureSessionCookie() {
-        String sessionCookieSecure = System.getProperty(PROPERTY_KEY_SESSION_COOKIE_SECURE);
-        if (sessionCookieSecure != null) {
-            return Boolean.valueOf(sessionCookieSecure).booleanValue();
-        }
-        return false;
-    }
-
     protected String getPartOfUri() {
         return ";" + getSessionCookieName() + "=";
     }

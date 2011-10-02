@@ -12,6 +12,8 @@ public abstract class SessionIdGenerator {
     public static final String PROPERTY_KEY_SESSION_ID_RETRY_LIMIT
         = "jp.troter.servlet.httpsession.spi.SessionIdGenerator.retryLimit";
 
+    public static final int DEFAULT_RETRY_LIMIT = 10;
+
     private static SingleServiceLoader<SessionIdGenerator> loader;
 
     private static synchronized SingleServiceLoader<SessionIdGenerator> getLoader() {
@@ -29,7 +31,13 @@ public abstract class SessionIdGenerator {
      * retry limit of session id generation
      * @return
      */
-    public abstract int getRetryLimit();
+    public int getRetryLimit() {
+        String retryLimit = System.getProperty(PROPERTY_KEY_SESSION_ID_RETRY_LIMIT);
+        if (retryLimit != null) {
+            return Integer.valueOf(retryLimit).intValue();
+        }
+        return DEFAULT_RETRY_LIMIT;
+    }
 
     /**
      * generate session id

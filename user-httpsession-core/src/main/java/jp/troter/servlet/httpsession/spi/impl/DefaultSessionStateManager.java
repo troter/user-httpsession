@@ -5,7 +5,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
@@ -18,28 +17,7 @@ public class DefaultSessionStateManager extends SessionStateManager {
 
     private static Logger log = LoggerFactory.getLogger(DefaultSessionStateManager.class);
 
-    private static final int DEFAULT_TIMEOUT_SECOND
-        = Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
-
     Map<String, Cell> sessionStore = new ConcurrentHashMap<String, Cell>();
-
-    @Override
-    public int getDefaultTimeoutSecond() {
-        String defaultTimeoutSecond = System.getProperty(PROPERTY_KEY_SESSION_STATE_DEFAULT_TIMEOUT_SECOND);
-        if (defaultTimeoutSecond != null) {
-            return Integer.valueOf(defaultTimeoutSecond).intValue();
-        }
-        return DEFAULT_TIMEOUT_SECOND;
-    }
-
-    @Override
-    public boolean isThrowException() {
-        String throwException = System.getProperty(PROPERTY_KEY_SESSION_STATE_THROW_EXCEPTION);
-        if (throwException != null) {
-            return Boolean.valueOf(throwException).booleanValue();
-        }
-        return false;
-    }
 
     @Override
     public SessionState loadState(String sessionId) {

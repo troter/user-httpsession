@@ -24,6 +24,8 @@ public abstract class SessionCookieHandler {
     public static final String PROPERTY_KEY_SESSION_COOKIE_SECURE
         = "jp.troter.servlet.httpsession.spi.SessionCookieHandler.sessionCookieSecure";
 
+    public static final String DEFAULT_SESSION_COOKIE_NAME = "SESSIONID";
+
     private static SingleServiceLoader<SessionCookieHandler> loader;
 
     private static synchronized SingleServiceLoader<SessionCookieHandler> getLoader() {
@@ -41,25 +43,49 @@ public abstract class SessionCookieHandler {
      * session id cookie name.
      * @return
      */
-    public abstract String getSessionCookieName();
+    public String getSessionCookieName() {
+        String sessionCookieName = System.getProperty(PROPERTY_KEY_SESSION_COOKIE_NAME);
+        if (sessionCookieName != null) {
+            return sessionCookieName;
+        }
+        return DEFAULT_SESSION_COOKIE_NAME;
+    }
 
     /**
      * session id cookie domain.
      * @return
      */
-    public abstract String getSessionCookieDomain();
+    public String getSessionCookieDomain() {
+        String sessionCookieDomain = System.getProperty(PROPERTY_KEY_SESSION_COOKIE_DOMAIN);
+        if (sessionCookieDomain != null) {
+            return sessionCookieDomain;
+        }
+        return null;
+    }
 
     /**
      * session id cookie path.
      * @return
      */
-    public abstract String getSessionCookiePath();
+    public String getSessionCookiePath() {
+        String sessionCookiePath = System.getProperty(PROPERTY_KEY_SESSION_COOKIE_PATH);
+        if (sessionCookiePath != null) {
+            return sessionCookiePath;
+        }
+        return null;
+    }
 
     /**
      * session id cookie secure.
      * @return
      */
-    public abstract boolean isSecureSessionCookie();
+    public boolean isSecureSessionCookie() {
+        String sessionCookieSecure = System.getProperty(PROPERTY_KEY_SESSION_COOKIE_SECURE);
+        if (sessionCookieSecure != null) {
+            return Boolean.valueOf(sessionCookieSecure).booleanValue();
+        }
+        return false;
+    }
 
     /**
      * get session id from cookie

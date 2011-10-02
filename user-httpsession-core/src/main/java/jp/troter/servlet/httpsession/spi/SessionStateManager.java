@@ -21,6 +21,9 @@ public abstract class SessionStateManager {
     public static final String PROPERTY_KEY_SESSION_STATE_THROW_EXCEPTION
         = "jp.troter.servlet.httpsession.spi.SessionStateManager.throwException";
 
+    public static final int DEFAULT_DEFAULT_TIMEOUT_SECOND
+        = Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
+
     private static SingleServiceLoader<SessionStateManager> loader;
 
     private static SessionStateManager sessionStateManager;
@@ -43,13 +46,25 @@ public abstract class SessionStateManager {
      * session timeout second.
      * @return session timeout second.
      */
-    public abstract int getDefaultTimeoutSecond();
+    public int getDefaultTimeoutSecond() {
+        String defaultTimeoutSecond = System.getProperty(PROPERTY_KEY_SESSION_STATE_DEFAULT_TIMEOUT_SECOND);
+        if (defaultTimeoutSecond != null) {
+            return Integer.valueOf(defaultTimeoutSecond).intValue();
+        }
+        return DEFAULT_DEFAULT_TIMEOUT_SECOND;
+    }
 
     /**
      * SessionStateManager throw exception.
      * @return
      */
-    public abstract boolean isThrowException();
+    public boolean isThrowException() {
+        String throwException = System.getProperty(PROPERTY_KEY_SESSION_STATE_THROW_EXCEPTION);
+        if (throwException != null) {
+            return Boolean.valueOf(throwException).booleanValue();
+        }
+        return false;
+    }
 
     /**
      * load {@link SessionState} from miscellaneous storage.
