@@ -2,13 +2,13 @@ package jp.troter.servlet.httpsession.example.mongo.spi.impl;
 
 import java.io.IOException;
 
-import jp.troter.servlet.httpsession.spi.MongoDBInitializer;
+import jp.troter.servlet.httpsession.spi.MongoJavaDriverInitializer;
 
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
 import com.mongodb.MongoURI;
 
-public class MongoDBInitializerImpl extends MongoDBInitializer {
+public class MongoJavaDriverInitializerImpl extends MongoJavaDriverInitializer {
 
     Mongo m = null;
 

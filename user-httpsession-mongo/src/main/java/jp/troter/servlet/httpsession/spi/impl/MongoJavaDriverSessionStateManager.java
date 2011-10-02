@@ -5,7 +5,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.troter.servlet.httpsession.spi.MongoDBInitializer;
+import jp.troter.servlet.httpsession.spi.MongoJavaDriverInitializer;
 import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
 import jp.troter.servlet.httpsession.state.SessionState;
 
@@ -18,9 +18,9 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-public class MongoSessionStateManager extends DefaultSessionStateManager {
+public class MongoJavaDriverSessionStateManager extends DefaultSessionStateManager {
 
-    private static Logger log = LoggerFactory.getLogger(MongoSessionStateManager.class);
+    private static Logger log = LoggerFactory.getLogger(MongoJavaDriverSessionStateManager.class);
 
     private static final String ATTRIBUTES_KEY = "attributes";
 
@@ -28,7 +28,7 @@ public class MongoSessionStateManager extends DefaultSessionStateManager {
 
     private static final String MAX_INACTIVE_INTERVAL_KEY = "max_inactive_interval";
 
-    protected MongoDBInitializer initializer;
+    protected MongoJavaDriverInitializer initializer;
 
     protected SessionValueSerializer serializer;
 
@@ -147,9 +147,9 @@ public class MongoSessionStateManager extends DefaultSessionStateManager {
         return MAX_INACTIVE_INTERVAL_KEY;
     }
 
-    protected MongoDBInitializer getInitializer() {
+    protected MongoJavaDriverInitializer getInitializer() {
         if (initializer == null) {
-            initializer = MongoDBInitializer.newInstance();
+            initializer = MongoJavaDriverInitializer.newInstance();
         }
         return initializer;
     }
