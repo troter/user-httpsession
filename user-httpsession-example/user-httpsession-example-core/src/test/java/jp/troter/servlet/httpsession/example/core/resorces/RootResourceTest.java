@@ -2,14 +2,19 @@ package jp.troter.servlet.httpsession.example.core.resorces;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.NewCookie;
 
 import jp.troter.servlet.httpsession.UserHttpSessionFilter;
+import jp.troter.servlet.httpsession.spi.SessionCookieHandler;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import com.sun.jersey.test.framework.JerseyTest;
@@ -48,5 +53,36 @@ public class RootResourceTest extends JerseyTest {
         JSONObject response4 = webResource.path("").cookie(c).get(JSONObject.class);
         assertEquals("0", response4.get("after").toString());
         assertEquals("true", response4.get("isNew").toString());
+    }
+
+    @Test
+    public void testSessionCookieHandlerSystemProperty() {
+        WebResource webResource = resource();
+        System.setProperty(SessionCookieHandler.PROPERTY_KEY_SESSION_COOKIE_NAME, "session");
+        System.setProperty(SessionCookieHandler.PROPERTY_KEY_SESSION_COOKIE_DOMAIN, "example.com");
+        System.setProperty(SessionCookieHandler.PROPERTY_KEY_SESSION_COOKIE_PATH, "/example/");
+        System.setProperty(SessionCookieHandler.PROPERTY_KEY_SESSION_COOKIE_SECURE, "true");
+        ClientResponse response = webResource.path("").get(ClientResponse.class);
+        List<NewCookie> cookies = response.getCookies();
+        boolean hasSessionCookie = false;
+        boolean customDomain = false;
+        boolean customPath = false;
+        boolean secure = false;
+        for (NewCookie newCookie : cookies) {
+            if (newCookie.getName().equals("session")) {
+                hasSessionCookie = true;
+                if (newCookie.getDomain().equals("example.com")) {
+                    customDomain = true;
+                }
+                if (newCookie.getPath().equals("/example/")) {
+                    customPath = true;
+                }
+                secure = newCookie.isSecure();
+            }
+        }
+        assertTrue(hasSessionCookie);
+        assertTrue(customDomain);
+        assertTrue(customPath);
+        assertTrue(secure);
     }
 }
