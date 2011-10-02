@@ -12,6 +12,18 @@ public abstract class SessionCookieHandler {
     private static final String DEFAULT_IMPLEMENTATION_NAME
         = "jp.troter.servlet.httpsession.spi.impl.DefaultSessionCookieHandler";
 
+    public static final String PROPERTY_KEY_SESSION_COOKIE_NAME
+        = "jp.troter.servlet.httpsession.spi.SessionCookieHandler.sessionCookieName";
+
+    public static final String PROPERTY_KEY_SESSION_COOKIE_DOMAIN
+        = "jp.troter.servlet.httpsession.spi.SessionCookieHandler.sessionCookieDomain";
+
+    public static final String PROPERTY_KEY_SESSION_COOKIE_PATH
+        = "jp.troter.servlet.httpsession.spi.SessionCookieHandler.sessionCookiePath";
+
+    public static final String PROPERTY_KEY_SESSION_COOKIE_SECURE
+        = "jp.troter.servlet.httpsession.spi.SessionCookieHandler.sessionCookieSecure";
+
     private static SingleServiceLoader<SessionCookieHandler> loader;
 
     private static synchronized SingleServiceLoader<SessionCookieHandler> getLoader() {

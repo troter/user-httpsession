@@ -14,4 +14,13 @@ public class SessionIdGeneratorTest {
         assertThat(instance, not(nullValue()));
         assertTrue(instance instanceof DefaultSessionIdGenerator);
     }
+
+    @Test
+    public void retryLimit() {
+        SessionIdGenerator instance = SessionIdGenerator.newInstance();
+        assertThat(instance.getRetryLimit(), is(10));
+        System.setProperty(SessionIdGenerator.PROPERTY_KEY_SESSION_ID_RETRY_LIMIT, "20");
+        assertThat(instance.getRetryLimit(), is(20));
+    }
+
 }

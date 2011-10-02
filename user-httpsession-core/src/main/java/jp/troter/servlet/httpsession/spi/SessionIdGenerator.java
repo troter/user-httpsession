@@ -9,6 +9,9 @@ public abstract class SessionIdGenerator {
     private static final String DEFAULT_IMPLEMENTATION_NAME
         = "jp.troter.servlet.httpsession.spi.impl.DefaultSessionIdGenerator";
 
+    public static final String PROPERTY_KEY_SESSION_ID_RETRY_LIMIT
+        = "jp.troter.servlet.httpsession.spi.SessionIdGenerator.retryLimit";
+
     private static SingleServiceLoader<SessionIdGenerator> loader;
 
     private static synchronized SingleServiceLoader<SessionIdGenerator> getLoader() {
