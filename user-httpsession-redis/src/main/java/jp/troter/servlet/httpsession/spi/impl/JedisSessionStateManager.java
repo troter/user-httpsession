@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jp.troter.servlet.httpsession.spi.JedisInitializer;
-import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
@@ -18,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import redis.clients.jedis.Jedis;
 
-public class JedisSessionStateManager extends SessionStateManager {
+public class JedisSessionStateManager extends DefaultSessionStateManager {
 
     private static Logger log = LoggerFactory.getLogger(JedisSessionStateManager.class);
 
@@ -95,10 +94,6 @@ public class JedisSessionStateManager extends SessionStateManager {
     }
 
     @Override
-    public int getDefaultTimeoutSecond() {
-        return getInitializer().getDefaultTimeoutSecond();
-    }
-
     protected SessionState newEmptySessionState() {
         return new DefaultSessionState(getDefaultTimeoutSecond());
     }

@@ -1,7 +1,5 @@
 package jp.troter.servlet.httpsession.example.memcached.spi.impl;
 
-import java.util.concurrent.TimeUnit;
-
 import jp.troter.servlet.httpsession.spi.MemcachedJavaClientInitializer;
 
 import com.danga.MemCached.MemCachedClient;
@@ -22,10 +20,4 @@ public class MemcachedJavaClientInitializerImpl extends MemcachedJavaClientIniti
         }
         return c;
     }
-
-    @Override
-    public int getDefaultTimeoutSecond() {
-        return Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
-    }
-
 }

@@ -4,7 +4,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.spi.SpyMemcachedInitializer;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
@@ -12,7 +11,7 @@ import jp.troter.servlet.httpsession.state.SessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SpyMemcachedSessionStateManager extends SessionStateManager {
+public class SpyMemcachedSessionStateManager extends DefaultSessionStateManager {
 
     private static Logger log = LoggerFactory.getLogger(SpyMemcachedSessionStateManager.class);
 
@@ -55,10 +54,6 @@ public class SpyMemcachedSessionStateManager extends SessionStateManager {
     }
 
     @Override
-    public int getDefaultTimeoutSecond() {
-        return getInitializer().getDefaultTimeoutSecond();
-    }
-
     protected SessionState newEmptySessionState() {
         return new DefaultSessionState(getDefaultTimeoutSecond());
     }

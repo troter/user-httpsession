@@ -18,7 +18,19 @@ public class DefaultSessionStateManager extends SessionStateManager {
 
     private static Logger log = LoggerFactory.getLogger(DefaultSessionStateManager.class);
 
+    private static final int DEFAULT_TIMEOUT_SECOND
+        = Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
+
     Map<String, Cell> sessionStore = new ConcurrentHashMap<String, Cell>();
+
+    @Override
+    public int getDefaultTimeoutSecond() {
+        String defaultTimeoutSecond = System.getProperty(PROPERTY_KEY_SESSION_STATE_DEFAULT_TIMEOUT_SECOND);
+        if (defaultTimeoutSecond != null) {
+            return Integer.valueOf(defaultTimeoutSecond).intValue();
+        }
+        return DEFAULT_TIMEOUT_SECOND;
+    }
 
     @Override
     public SessionState loadState(String sessionId) {
@@ -57,11 +69,6 @@ public class DefaultSessionStateManager extends SessionStateManager {
     @Override
     public void removeState(String sessionId) {
         sessionStore.remove(sessionId);
-    }
-
-    @Override
-    public int getDefaultTimeoutSecond() {
-        return Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
     }
 
     protected SessionState newEmptySessionState() {

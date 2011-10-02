@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jp.troter.servlet.httpsession.spi.MongoDBInitializer;
-import jp.troter.servlet.httpsession.spi.SessionStateManager;
 import jp.troter.servlet.httpsession.spi.SessionValueSerializer;
 import jp.troter.servlet.httpsession.state.DefaultSessionState;
 import jp.troter.servlet.httpsession.state.SessionState;
@@ -20,7 +19,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-public class MongoSessionStateManager extends SessionStateManager {
+public class MongoSessionStateManager extends DefaultSessionStateManager {
 
     private static Logger log = LoggerFactory.getLogger(MongoSessionStateManager.class);
 
@@ -78,10 +77,6 @@ public class MongoSessionStateManager extends SessionStateManager {
     }
 
     @Override
-    public int getDefaultTimeoutSecond() {
-        return getInitializer().getDefaultTimeoutSecond();
-    }
-
     protected SessionState newEmptySessionState() {
         return new DefaultSessionState(getDefaultTimeoutSecond());
     }

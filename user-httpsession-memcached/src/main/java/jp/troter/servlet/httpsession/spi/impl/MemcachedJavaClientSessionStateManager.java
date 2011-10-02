@@ -12,8 +12,7 @@ import jp.troter.servlet.httpsession.state.SessionState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MemcachedJavaClientSessionStateManager extends
-        DefaultSessionStateManager {
+public class MemcachedJavaClientSessionStateManager extends DefaultSessionStateManager {
 
     private static Logger log = LoggerFactory.getLogger(MemcachedJavaClientSessionStateManager.class);
 
@@ -53,11 +52,6 @@ public class MemcachedJavaClientSessionStateManager extends
         } catch (RuntimeException e) {
             log.warn("Memcached exception occurred at delete method. session_id=" + sessionId, e);
         }
-    }
-
-    @Override
-    public int getDefaultTimeoutSecond() {
-        return getInitializer().getDefaultTimeoutSecond();
     }
 
     @Override

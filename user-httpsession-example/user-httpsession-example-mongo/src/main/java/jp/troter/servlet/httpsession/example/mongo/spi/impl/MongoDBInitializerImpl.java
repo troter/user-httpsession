@@ -1,7 +1,6 @@
 package jp.troter.servlet.httpsession.example.mongo.spi.impl;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import jp.troter.servlet.httpsession.spi.MongoDBInitializer;
 
@@ -24,10 +23,5 @@ public class MongoDBInitializerImpl extends MongoDBInitializer {
             }
         }
         return m.getDB("httpsession").getCollection("httpsession");
-    }
-
-    @Override
-    public int getDefaultTimeoutSecond() {
-        return Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
     }
 }

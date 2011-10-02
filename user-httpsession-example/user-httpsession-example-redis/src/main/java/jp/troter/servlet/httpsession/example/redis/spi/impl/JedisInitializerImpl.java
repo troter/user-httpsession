@@ -1,7 +1,5 @@
 package jp.troter.servlet.httpsession.example.redis.spi.impl;
 
-import java.util.concurrent.TimeUnit;
-
 import jp.troter.servlet.httpsession.spi.JedisInitializer;
 
 import org.apache.commons.pool.impl.GenericObjectPool;
@@ -25,10 +23,4 @@ public class JedisInitializerImpl extends JedisInitializer {
         }
         return p;
     }
-
-    @Override
-    public int getDefaultTimeoutSecond() {
-        return Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
-    }
-
 }

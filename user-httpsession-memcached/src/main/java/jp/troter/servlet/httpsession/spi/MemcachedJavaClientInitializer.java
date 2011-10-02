@@ -21,7 +21,4 @@ public abstract class MemcachedJavaClientInitializer {
     }
 
     public abstract MemCachedClient getMemCachedClient();
-
-    public abstract int getDefaultTimeoutSecond();
-
 }

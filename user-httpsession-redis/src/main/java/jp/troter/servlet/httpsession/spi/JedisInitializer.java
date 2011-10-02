@@ -21,7 +21,4 @@ public abstract class JedisInitializer {
     }
 
     public abstract JedisPool getJedisPool();
-
-    public abstract int getDefaultTimeoutSecond();
-
 }
