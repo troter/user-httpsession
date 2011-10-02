@@ -18,6 +18,7 @@
   <description />
 
   <modules>
+    <module>user-httpsession-example-core</module>
     <module>user-httpsession-example-memcached-java-client</module>
     <module>user-httpsession-example-spymemcached</module>
     <module>user-httpsession-example-mongo</module>
