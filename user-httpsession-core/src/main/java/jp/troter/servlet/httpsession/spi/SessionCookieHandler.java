@@ -32,6 +32,24 @@ public abstract class SessionCookieHandler {
     public abstract String getSessionCookieName();
 
     /**
+     * session id cookie domain.
+     * @return
+     */
+    public abstract String getSessionCookieDomain();
+
+    /**
+     * session id cookie path.
+     * @return
+     */
+    public abstract String getSessionCookiePath();
+
+    /**
+     * session id cookie secure.
+     * @return
+     */
+    public abstract boolean isSecureSessionCookie();
+
+    /**
      * get session id from cookie
      * @param request
      * @return
@@ -73,10 +91,9 @@ public abstract class SessionCookieHandler {
      * create session cookie
      * @param request
      * @param response
-     * @param sessionCookieName
      * @param sessionId
      * @return
      */
     public abstract Cookie createSessionCookie(HttpServletRequest request,
-            HttpServletResponse response, String sessionCookieName, String sessionId);
+            HttpServletResponse response, String sessionId);
 }

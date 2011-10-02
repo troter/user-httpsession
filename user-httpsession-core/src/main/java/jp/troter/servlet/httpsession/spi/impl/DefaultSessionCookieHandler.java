@@ -17,6 +17,22 @@ public class DefaultSessionCookieHandler extends SessionCookieHandler {
     public String getSessionCookieName() {
         return SESSION_COOKIE_NAME;
     }
+
+    @Override
+    public String getSessionCookieDomain() {
+        return null;
+    }
+
+    @Override
+    public String getSessionCookiePath() {
+        return null;
+    }
+
+    @Override
+    public boolean isSecureSessionCookie() {
+        return false;
+    }
+
     protected String getPartOfUri() {
         return ";" + getSessionCookieName() + "=";
     }
@@ -75,8 +91,7 @@ public class DefaultSessionCookieHandler extends SessionCookieHandler {
         if (request.isRequestedSessionIdFromCookie()) {
             return;
         }
-        Cookie cookie = createSessionCookie(request, response,
-                getSessionCookieName(), sessionId);
+        Cookie cookie = createSessionCookie(request, response, sessionId);
         response.addCookie(cookie);
     }
 
@@ -86,18 +101,27 @@ public class DefaultSessionCookieHandler extends SessionCookieHandler {
         if (request.isRequestedSessionIdFromCookie()) {
             return;
         }
-        Cookie cookie = createSessionCookie(request, response,
-                getSessionCookieName(), sessionId);
+        Cookie cookie = createSessionCookie(request, response, sessionId);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
 
     @Override
     public Cookie createSessionCookie(HttpServletRequest request,
-            HttpServletResponse response, String sessionCookieName, String sessionId) {
-        Cookie cookie = new Cookie(sessionCookieName, sessionId);
+            HttpServletResponse response, String sessionId) {
+        Cookie cookie = new Cookie(getSessionCookieName(), sessionId);
+
+        if (! StringUtils.isEmpty(getSessionCookieDomain())) {
+            cookie.setDomain(getSessionCookieDomain());
+        }
+
         String path = request.getContextPath();
+        if (! StringUtils.isEmpty(getSessionCookiePath())) {
+            path = getSessionCookiePath();
+        }
         cookie.setPath(StringUtils.isEmpty(path) ? "/" : path);
+
+        cookie.setSecure(isSecureSessionCookie());
         return cookie;
     }
 }
