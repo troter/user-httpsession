@@ -8,7 +8,7 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 
 import jp.troter.servlet.httpsession.UserHttpSessionFilter;
-import jp.troter.servlet.httpsession.spi.SessionCookieHandler;
+import jp.troter.servlet.httpsession.example.core.UserHttpSessionInitializer;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -26,6 +26,7 @@ public class RootResourceTest extends JerseyTest {
         super(new WebAppDescriptor.Builder("jp.troter.servlet.httpsession.example.core.resources")
             .servletClass(ServletContainer.class)
             .initParam("com.sun.jersey.api.json.POJOMappingFeature", "true")
+            .contextListenerClass(UserHttpSessionInitializer.class)
             .addFilter(UserHttpSessionFilter.class, "user httpsession filter")
             .build());
     }
@@ -34,7 +35,7 @@ public class RootResourceTest extends JerseyTest {
     public void testRoot() throws JSONException {
         WebResource webResource = resource();
         JSONObject response1 = webResource.path("").get(JSONObject.class);
-        Cookie c = new Cookie("SESSIONID", response1.get("sessionid").toString());
+        Cookie c = new Cookie("session", response1.get("sessionid").toString());
         assertEquals("0", response1.get("after").toString());
         assertEquals("true", response1.get("isNew").toString());
 
@@ -58,10 +59,6 @@ public class RootResourceTest extends JerseyTest {
     @Test
     public void testSessionCookieHandlerSystemProperty() {
         WebResource webResource = resource();
-        System.setProperty(SessionCookieHandler.PROPERTY_KEY_SESSION_COOKIE_NAME, "session");
-        System.setProperty(SessionCookieHandler.PROPERTY_KEY_SESSION_COOKIE_DOMAIN, "example.com");
-        System.setProperty(SessionCookieHandler.PROPERTY_KEY_SESSION_COOKIE_PATH, "/example/");
-        System.setProperty(SessionCookieHandler.PROPERTY_KEY_SESSION_COOKIE_SECURE, "true");
         ClientResponse response = webResource.path("").get(ClientResponse.class);
         List<NewCookie> cookies = response.getCookies();
         boolean hasSessionCookie = false;
