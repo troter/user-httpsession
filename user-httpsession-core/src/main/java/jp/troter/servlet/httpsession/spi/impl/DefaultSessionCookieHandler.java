@@ -11,14 +11,14 @@ import org.apache.commons.lang.StringUtils;
 
 public class DefaultSessionCookieHandler extends SessionCookieHandler {
 
-    private static final String SESSION_ID_KEY = "SESSIONID";
+    private static final String SESSION_COOKIE_NAME = "SESSIONID";
 
     @Override
-    public String getSessionIdKey() {
-        return SESSION_ID_KEY;
+    public String getSessionCookieName() {
+        return SESSION_COOKIE_NAME;
     }
     protected String getPartOfUri() {
-        return ";" + getSessionIdKey() + "=";
+        return ";" + getSessionCookieName() + "=";
     }
 
     @Override
@@ -29,7 +29,7 @@ public class DefaultSessionCookieHandler extends SessionCookieHandler {
         }
         for (int i = 0; i < cookies.length; i++) {
             Cookie cookie = cookies[i];
-            if (cookie.getName().equals(getSessionIdKey())) {
+            if (cookie.getName().equals(getSessionCookieName())) {
                 return cookie.getValue();
             }
         }
@@ -76,7 +76,7 @@ public class DefaultSessionCookieHandler extends SessionCookieHandler {
             return;
         }
         Cookie cookie = createSessionCookie(request, response,
-                getSessionIdKey(), sessionId);
+                getSessionCookieName(), sessionId);
         response.addCookie(cookie);
     }
 
@@ -87,15 +87,15 @@ public class DefaultSessionCookieHandler extends SessionCookieHandler {
             return;
         }
         Cookie cookie = createSessionCookie(request, response,
-                getSessionIdKey(), sessionId);
+                getSessionCookieName(), sessionId);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
     }
 
     @Override
     public Cookie createSessionCookie(HttpServletRequest request,
-            HttpServletResponse response, String sessionIdKey, String sessionId) {
-        Cookie cookie = new Cookie(sessionIdKey, sessionId);
+            HttpServletResponse response, String sessionCookieName, String sessionId) {
+        Cookie cookie = new Cookie(sessionCookieName, sessionId);
         String path = request.getContextPath();
         cookie.setPath(StringUtils.isEmpty(path) ? "/" : path);
         return cookie;

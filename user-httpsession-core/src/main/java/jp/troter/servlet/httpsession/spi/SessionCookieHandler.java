@@ -29,7 +29,7 @@ public abstract class SessionCookieHandler {
      * session id cookie name.
      * @return
      */
-    public abstract String getSessionIdKey();
+    public abstract String getSessionCookieName();
 
     /**
      * get session id from cookie
@@ -73,10 +73,10 @@ public abstract class SessionCookieHandler {
      * create session cookie
      * @param request
      * @param response
-     * @param sessionIdKey
+     * @param sessionCookieName
      * @param sessionId
      * @return
      */
     public abstract Cookie createSessionCookie(HttpServletRequest request,
-            HttpServletResponse response, String sessionIdKey, String sessionId);
+            HttpServletResponse response, String sessionCookieName, String sessionId);
 }
