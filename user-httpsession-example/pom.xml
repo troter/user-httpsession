@@ -21,8 +21,8 @@
     <module>user-httpsession-example-core</module>
     <module>user-httpsession-example-memcached-java-client</module>
     <module>user-httpsession-example-spymemcached</module>
-    <module>user-httpsession-example-mongo</module>
-    <module>user-httpsession-example-redis</module>
+    <module>user-httpsession-example-mongo-java-driver</module>
+    <module>user-httpsession-example-jedis</module>
   </modules>
 
   <dependencyManagement>
