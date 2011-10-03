@@ -20,8 +20,6 @@ public class JedisSessionStateManager extends DefaultSessionStateManager {
 
     private static Logger log = LoggerFactory.getLogger(JedisSessionStateManager.class);
 
-    private static final String KEY_PREFIX = "httpsession";
-
     protected JedisInitializer initializer;
 
     protected SessionValueSerializer serializer;
@@ -109,7 +107,7 @@ public class JedisSessionStateManager extends DefaultSessionStateManager {
     }
 
     protected String key(String sessionId) {
-        return KEY_PREFIX + "/" + sessionId;
+        return getNameSpace() + "/" + sessionId;
     }
 
     protected JedisInitializer getInitializer() {

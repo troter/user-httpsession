@@ -1,6 +1,6 @@
 package jp.troter.servlet.httpsession.spi;
 
-import com.mongodb.DBCollection;
+import com.mongodb.DB;
 
 public abstract class MongoJavaDriverInitializer {
 
@@ -20,5 +20,5 @@ public abstract class MongoJavaDriverInitializer {
         return getLoader().newService();
     }
 
-    public abstract DBCollection getDBCollection();
+    public abstract DB getDB();
 }

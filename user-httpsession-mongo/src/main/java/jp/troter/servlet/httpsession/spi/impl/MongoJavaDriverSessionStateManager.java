@@ -132,7 +132,7 @@ public class MongoJavaDriverSessionStateManager extends DefaultSessionStateManag
     }
 
     protected DBCollection getSessionCollection() {
-        return getInitializer().getDBCollection();
+        return getInitializer().getDB().getCollection(getNameSpace());
     }
 
     protected String getAttributesKey() {

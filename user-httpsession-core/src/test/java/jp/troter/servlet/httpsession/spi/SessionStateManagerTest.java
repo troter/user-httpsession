@@ -32,4 +32,12 @@ public class SessionStateManagerTest {
         System.setProperty(SessionStateManager.PROPERTY_KEY_SESSION_STATE_THROW_EXCEPTION, "false");
         assertThat(instance.isThrowException(), is(false));
     }
+
+    @Test
+    public void nameSpace() {
+        SessionStateManager instance = SessionStateManager.getInstance();
+        assertThat(instance.getNameSpace(), is("httpsession"));
+        System.setProperty(SessionStateManager.PROPERTY_KEY_SESSION_STATE_NAME_SPACE, "HTTPSESSION");
+        assertThat(instance.getNameSpace(), is("HTTPSESSION"));
+    }
 }

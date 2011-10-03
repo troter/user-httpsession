@@ -21,8 +21,13 @@ public abstract class SessionStateManager {
     public static final String PROPERTY_KEY_SESSION_STATE_THROW_EXCEPTION
         = "jp.troter.servlet.httpsession.spi.SessionStateManager.throwException";
 
+    public static final String PROPERTY_KEY_SESSION_STATE_NAME_SPACE
+        = "jp.troter.servlet.httpsession.spi.SessionStateManager.nameSpace";
+
     public static final int DEFAULT_DEFAULT_TIMEOUT_SECOND
         = Long.valueOf(TimeUnit.HOURS.toSeconds(1L)).intValue();
+
+    public static final String DEFAULT_NAME_SPACE = "httpsession";
 
     private static SingleServiceLoader<SessionStateManager> loader;
 
@@ -64,6 +69,18 @@ public abstract class SessionStateManager {
             return Boolean.valueOf(throwException).booleanValue();
         }
         return false;
+    }
+
+    /**
+     * httpsession name space.
+     * @return
+     */
+    public String getNameSpace() {
+        String nameSpace = System.getProperty(PROPERTY_KEY_SESSION_STATE_NAME_SPACE);
+        if (nameSpace != null) {
+            return nameSpace;
+        }
+        return DEFAULT_NAME_SPACE;
     }
 
     /**

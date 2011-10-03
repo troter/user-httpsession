@@ -14,8 +14,6 @@ public class SpyMemcachedSessionStateManager extends DefaultSessionStateManager 
 
     private static Logger log = LoggerFactory.getLogger(SpyMemcachedSessionStateManager.class);
 
-    private static final String KEY_PREFIX = "httpsession";
-
     protected SpyMemcachedInitializer initializer;
 
     @Override
@@ -82,7 +80,7 @@ public class SpyMemcachedSessionStateManager extends DefaultSessionStateManager 
     }
 
     protected String key(String sessionId) {
-        return KEY_PREFIX + "/" + sessionId;
+        return getNameSpace() + "/" + sessionId;
     }
 
     protected SpyMemcachedInitializer getInitializer() {

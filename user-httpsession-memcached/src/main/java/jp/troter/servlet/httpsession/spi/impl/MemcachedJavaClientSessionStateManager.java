@@ -16,8 +16,6 @@ public class MemcachedJavaClientSessionStateManager extends DefaultSessionStateM
 
     private static Logger log = LoggerFactory.getLogger(MemcachedJavaClientSessionStateManager.class);
 
-    private static final String KEY_PREFIX = "httpsession";
-
     protected MemcachedJavaClientInitializer initializer;
 
     @Override
@@ -84,7 +82,7 @@ public class MemcachedJavaClientSessionStateManager extends DefaultSessionStateM
     }
 
     protected String key(String sessionId) {
-        return KEY_PREFIX + "/" + sessionId;
+        return getNameSpace() + "/" + sessionId;
     }
 
     protected MemcachedJavaClientInitializer getInitializer() {

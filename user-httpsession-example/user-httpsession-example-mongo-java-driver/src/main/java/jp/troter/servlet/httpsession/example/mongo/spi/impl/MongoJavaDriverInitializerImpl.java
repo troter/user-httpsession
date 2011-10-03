@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import jp.troter.servlet.httpsession.spi.MongoJavaDriverInitializer;
 
-import com.mongodb.DBCollection;
+import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoURI;
 
@@ -13,7 +13,7 @@ public class MongoJavaDriverInitializerImpl extends MongoJavaDriverInitializer {
     Mongo m = null;
 
     @Override
-    public DBCollection getDBCollection() {
+    public DB getDB() {
         if (m == null) {
             try {
                 MongoURI uri = new MongoURI("mongodb://127.0.0.1:27017");
@@ -22,6 +22,6 @@ public class MongoJavaDriverInitializerImpl extends MongoJavaDriverInitializer {
                 return null;
             }
         }
-        return m.getDB("httpsession").getCollection("httpsession");
+        return m.getDB("httpsession");
     }
 }
