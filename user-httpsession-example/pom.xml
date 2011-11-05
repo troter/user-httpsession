@@ -61,6 +61,7 @@
             <configuration>
               <outputDirectory>src/main/webapp/WEB-INF/lib</outputDirectory>
               <excludeScope>provided</excludeScope>
+              <excludeGroupIds>${project.groupId}</excludeGroupIds>
               <overWriteIfNewer>true</overWriteIfNewer>
               <overWriteReleases>true</overWriteReleases>
               <overWriteSnapshots>true</overWriteSnapshots>
