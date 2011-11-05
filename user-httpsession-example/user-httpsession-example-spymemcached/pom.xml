@@ -10,7 +10,6 @@
 
   <groupId>jp.troter.user-httpsession</groupId>
   <artifactId>user-httpsession-example-spymemcached</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <name>User HttpSession Example Spymemcached</name>
