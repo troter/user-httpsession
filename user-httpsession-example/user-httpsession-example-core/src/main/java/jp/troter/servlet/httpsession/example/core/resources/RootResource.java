@@ -1,5 +1,6 @@
 package jp.troter.servlet.httpsession.example.core.resources;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +78,9 @@ public class RootResource {
         return "";
     }
 
-    public static class HttpSessionBindingListenerImpl implements HttpSessionBindingListener {
+    public static class HttpSessionBindingListenerImpl implements HttpSessionBindingListener, Serializable {
+
+        private static final long serialVersionUID = 1L;
 
         public static HttpSessionBindingListenerImpl instance = new HttpSessionBindingListenerImpl();
 
