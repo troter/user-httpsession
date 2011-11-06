@@ -178,15 +178,13 @@ public class UserHttpSession implements HttpSession {
     }
 
     public void notifyValueBound(String name, Object value, Object unbound) {
-        if (value instanceof HttpSessionBindingListener) {
-            if (value != unbound) {
-                HttpSessionBindingEvent event = new HttpSessionBindingEvent(this, name, unbound);
-                try {
-                    ((HttpSessionBindingListener) value).valueBound(event);
-                } catch (Throwable t) {
-                    String message = String.format("Exception invoking valueBound() on HttpSessionBindingListener: %s", value.getClass().getName());
-                    log.warn(message, t);
-                }
+        if ((value != unbound) && (value instanceof HttpSessionBindingListener)) {
+            HttpSessionBindingEvent event = new HttpSessionBindingEvent(this, name, unbound);
+            try {
+                ((HttpSessionBindingListener) value).valueBound(event);
+            } catch (Throwable t) {
+                String message = String.format("Exception invoking valueBound() on HttpSessionBindingListener: %s", value.getClass().getName());
+                log.warn(message, t);
             }
         }
     }
