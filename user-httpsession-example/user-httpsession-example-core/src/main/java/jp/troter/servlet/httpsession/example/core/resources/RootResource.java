@@ -71,9 +71,9 @@ public class RootResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String bound(@Context HttpServletRequest req) {
         HttpSession session = req.getSession();
-        session.setAttribute("bound", HttpSessionBindingListenerImpl.instance);
+        session.setAttribute("bound", HttpSessionBindingListenerImpl.getInstance());
         session.setAttribute("bound", 1);
-        session.setAttribute("bound", HttpSessionBindingListenerImpl.instance);
+        session.setAttribute("bound", HttpSessionBindingListenerImpl.getInstance());
         session.removeAttribute("bound");
         return "";
     }
@@ -82,7 +82,15 @@ public class RootResource {
 
         private static final long serialVersionUID = 1L;
 
-        public static HttpSessionBindingListenerImpl instance = new HttpSessionBindingListenerImpl();
+        private static HttpSessionBindingListenerImpl INSTANCE = new HttpSessionBindingListenerImpl();
+
+        public static HttpSessionBindingListenerImpl getInstance() {
+            return INSTANCE;
+        }
+
+        public static void setInstance(HttpSessionBindingListenerImpl instance) {
+            INSTANCE = instance;
+        }
 
         public List<Tuple> bounds = new ArrayList<Tuple>();
         public List<Tuple> unBounds = new ArrayList<Tuple>();

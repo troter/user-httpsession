@@ -158,7 +158,7 @@ public class RootResourceTest extends JerseyTest {
 
     @Test
     public void testHttpSessionBoundListener() {
-        HttpSessionBindingListenerImpl impl = HttpSessionBindingListenerImpl.instance;
+        HttpSessionBindingListenerImpl impl = HttpSessionBindingListenerImpl.getInstance();
 
         WebResource webResource = resource();
         webResource.path("bound").get(String.class);
