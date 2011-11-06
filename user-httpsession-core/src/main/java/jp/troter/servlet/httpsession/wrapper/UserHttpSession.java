@@ -191,7 +191,7 @@ public class UserHttpSession implements HttpSession {
 
     public void notifyAttributeAddedOrAttributeReplaced(String name, Object value, Object unbound) {
         HttpSessionBindingEvent event = null;
-        for (HttpSessionAttributeListener listener : UserHttpSessionListenerHolder.httpSessionAttributeListeners) {
+        for (HttpSessionAttributeListener listener : UserHttpSessionListenerHolder.getHttpSessionAttributeListeners()) {
             try {
                 if (unbound != null) {
                     if (event == null) {
@@ -213,7 +213,7 @@ public class UserHttpSession implements HttpSession {
 
     public void notifyAttributeRemoved(String name, Object value) {
         HttpSessionBindingEvent event = null;
-        for (HttpSessionAttributeListener listener : UserHttpSessionListenerHolder.httpSessionAttributeListeners) {
+        for (HttpSessionAttributeListener listener : UserHttpSessionListenerHolder.getHttpSessionAttributeListeners()) {
             try {
                 if (event == null) {
                     event = new HttpSessionBindingEvent(this, name, value);
@@ -228,7 +228,7 @@ public class UserHttpSession implements HttpSession {
 
     public void notifySessionCreated() {
         HttpSessionEvent event = new HttpSessionEvent(this);
-        for (HttpSessionListener listener : UserHttpSessionListenerHolder.httpSessionListeners) {
+        for (HttpSessionListener listener : UserHttpSessionListenerHolder.getHttpSessionListeners()) {
             try {
                 listener.sessionCreated(event);
             } catch (Throwable t) {
@@ -240,7 +240,7 @@ public class UserHttpSession implements HttpSession {
 
     public void notifySessionDestroyed() {
         HttpSessionEvent event = new HttpSessionEvent(this);
-        for (HttpSessionListener listener : UserHttpSessionListenerHolder.httpSessionListeners) {
+        for (HttpSessionListener listener : UserHttpSessionListenerHolder.getHttpSessionListeners()) {
             try {
                 listener.sessionDestroyed(event);
             } catch (Throwable t) {

@@ -8,9 +8,25 @@ import javax.servlet.http.HttpSessionListener;
 
 public class UserHttpSessionListenerHolder {
 
-    public static List<HttpSessionAttributeListener> httpSessionAttributeListeners
+    private static List<HttpSessionAttributeListener> httpSessionAttributeListeners
         = new CopyOnWriteArrayList<HttpSessionAttributeListener>();
 
-    public static List<HttpSessionListener> httpSessionListeners
+    private static List<HttpSessionListener> httpSessionListeners
         = new CopyOnWriteArrayList<HttpSessionListener>();
+
+    public static void addHttpSessionAttributeListener(HttpSessionAttributeListener listener) {
+        httpSessionAttributeListeners.add(listener);
+    }
+
+    public static List<HttpSessionAttributeListener> getHttpSessionAttributeListeners() {
+        return httpSessionAttributeListeners;
+    }
+
+    public static void addHttpSessionListener(HttpSessionListener listener) {
+        httpSessionListeners.add(listener);
+    }
+
+    public static List<HttpSessionListener> getHttpSessionListeners() {
+        return httpSessionListeners;
+    }
 }
