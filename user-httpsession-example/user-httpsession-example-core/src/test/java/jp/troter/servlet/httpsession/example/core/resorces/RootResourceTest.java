@@ -94,7 +94,7 @@ public class RootResourceTest extends JerseyTest {
     @Test
     public void testHttpSessionListener() throws JSONException {
         HttpSessionListenerImpl impl = new HttpSessionListenerImpl();
-        UserHttpSessionListenerHolder.httpSessionListeners.add(impl);
+        UserHttpSessionListenerHolder.addHttpSessionListener(impl);
 
         WebResource webResource = resource();
         JSONObject response = null;
@@ -130,7 +130,7 @@ public class RootResourceTest extends JerseyTest {
     @Test
     public void testHttpSessionAttributeListener() {
         HttpSessionAttributeListenerImpl impl = new HttpSessionAttributeListenerImpl();
-        UserHttpSessionListenerHolder.httpSessionAttributeListeners.add(impl);
+        UserHttpSessionListenerHolder.addHttpSessionAttributeListener(impl);
 
         WebResource webResource = resource();
         webResource.path("attribute").get(String.class);
