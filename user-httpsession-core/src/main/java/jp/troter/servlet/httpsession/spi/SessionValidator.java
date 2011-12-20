@@ -8,7 +8,7 @@ public abstract class SessionValidator {
     private static final String SERVICE_CLASS_NAME
         = "jp.troter.servlet.httpsession.spi.SessionValidator";
     private static final String DEFAULT_IMPLEMENTATION_NAME
-        = "jp.troter.servlet.httpsession.spi.impl.DefaultSessionValidator";
+        = "jp.troter.servlet.httpsession.spi.support.DefaultSessionValidator";
 
     private static SingleServiceLoader<SessionValidator> loader;
 

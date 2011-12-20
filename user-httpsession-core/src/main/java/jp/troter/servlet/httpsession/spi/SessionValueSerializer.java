@@ -9,7 +9,7 @@ public abstract class SessionValueSerializer {
     private static final String SERVICE_CLASS_NAME
         = "jp.troter.servlet.httpsession.spi.SessionValueSerializer";
     private static final String DEFAULT_IMPLEMENTATION_NAME
-        = "jp.troter.servlet.httpsession.spi.impl.DefaultSessionValueSerializer";
+        = "jp.troter.servlet.httpsession.spi.support.DefaultSessionValueSerializer";
 
     private static SingleServiceLoader<SessionValueSerializer> loader;
 

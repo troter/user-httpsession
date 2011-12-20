@@ -13,7 +13,7 @@ public abstract class SessionStateManager {
     private static final String SERVICE_CLASS_NAME
         = "jp.troter.servlet.httpsession.spi.SessionStateManager";
     private static final String DEFAULT_IMPLEMENTATION_NAME
-        = "jp.troter.servlet.httpsession.spi.impl.DefaultSessionStateManager";
+        = "jp.troter.servlet.httpsession.spi.support.DefaultSessionStateManager";
 
     public static final String PROPERTY_KEY_SESSION_STATE_DEFAULT_TIMEOUT_SECOND
         = "jp.troter.servlet.httpsession.spi.SessionStateManager.defaultTimeoutSecond";

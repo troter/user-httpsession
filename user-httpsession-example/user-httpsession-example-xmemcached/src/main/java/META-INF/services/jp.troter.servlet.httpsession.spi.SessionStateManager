@@ -1,1 +1,1 @@
-jp.troter.servlet.httpsession.spi.impl.XMemcachedSessionStateManager
+jp.troter.servlet.httpsession.spi.memcached.XMemcachedSessionStateManager

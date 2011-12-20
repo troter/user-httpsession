@@ -10,7 +10,7 @@ public abstract class SessionCookieHandler {
     private static final String SERVICE_CLASS_NAME
         = "jp.troter.servlet.httpsession.spi.SessionCookieHandler";
     private static final String DEFAULT_IMPLEMENTATION_NAME
-        = "jp.troter.servlet.httpsession.spi.impl.DefaultSessionCookieHandler";
+        = "jp.troter.servlet.httpsession.spi.support.DefaultSessionCookieHandler";
 
     public static final String PROPERTY_KEY_SESSION_COOKIE_NAME
         = "jp.troter.servlet.httpsession.spi.SessionCookieHandler.sessionCookieName";

@@ -1,1 +1,1 @@
-jp.troter.servlet.httpsession.spi.impl.JedisSessionStateManager
+jp.troter.servlet.httpsession.spi.redis.JedisSessionStateManager

@@ -2,7 +2,7 @@ package jp.troter.servlet.httpsession.spi;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import jp.troter.servlet.httpsession.spi.impl.DefaultSessionValidator;
+import jp.troter.servlet.httpsession.spi.support.DefaultSessionValidator;
 
 import org.junit.Test;
 

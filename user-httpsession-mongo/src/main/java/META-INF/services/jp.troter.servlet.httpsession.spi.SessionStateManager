@@ -1,1 +1,1 @@
-jp.troter.servlet.httpsession.spi.impl.MongoJavaDriverSessionStateManager
+jp.troter.servlet.httpsession.spi.mongo.MongoJavaDriverSessionStateManager
