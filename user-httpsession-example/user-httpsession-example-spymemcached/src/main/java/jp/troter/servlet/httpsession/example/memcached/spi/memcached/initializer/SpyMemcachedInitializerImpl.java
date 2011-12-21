@@ -1,4 +1,4 @@
-package jp.troter.servlet.httpsession.example.memcached.spi.memcahced.initializer;
+package jp.troter.servlet.httpsession.example.memcached.spi.memcached.initializer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
